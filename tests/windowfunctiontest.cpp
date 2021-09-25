@@ -81,8 +81,7 @@ TEST(WindowFunctionTest, ConvolutionOfPulseAndRectangle)
     std::vector<double> b(width, 1.0);
     std::vector<double> c = win.convolve(a, b);
     for (unsigned int i = 0; i < width; i++) {
-        float a = c[i];
-        ASSERT_FLOAT_EQ(1.0 / width, a);
+        ASSERT_FLOAT_EQ(1.0 / width, c[i]);
     }
 }
 
@@ -110,7 +109,6 @@ TEST(WindowFunctionTest, ConvolutionOfPulseAndCurve)
     }
     std::vector<double> c = win.convolve(a, b);
     for (unsigned int i = 0; i < width; i++) {
-        float a = c[i];
-        ASSERT_FLOAT_EQ(win.window(KeyFinder::WINDOW_BLACKMAN, i, width) / width, a);
+        ASSERT_FLOAT_EQ(win.window(KeyFinder::WINDOW_BLACKMAN, i, width) / width, c[i]);
     }
 }

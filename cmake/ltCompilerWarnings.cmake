@@ -20,7 +20,6 @@ else ()
                     -Wunused-parameter
                     -Wnarrowing
                     -Wshadow
-                    # -Wno-sign-compare
                     # -Wconversion
                     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
                         -Wshadow-all
