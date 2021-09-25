@@ -24,22 +24,21 @@
 namespace KeyFinder {
 
 Workspace::Workspace()
-    : remainderBuffer()
-    , preprocessedBuffer()
-    , chromagram(NULL)
-    , fftAdapter(NULL)
-    , lpfBuffer(NULL)
+
 {
 }
 
 Workspace::~Workspace()
 {
-    if (fftAdapter != NULL)
+    {
         delete fftAdapter;
-    if (chromagram != NULL)
+    }
+    {
         delete chromagram;
-    if (lpfBuffer != NULL)
+    }
+    {
         delete lpfBuffer;
+    }
 }
 
 }

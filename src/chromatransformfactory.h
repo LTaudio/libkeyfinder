@@ -31,24 +31,24 @@ class ChromaTransformFactory {
 public:
     ChromaTransformFactory();
     ~ChromaTransformFactory();
-    const ChromaTransform* getChromaTransform(unsigned int frameRate);
+    auto getChromaTransform(unsigned int frameRate) -> const ChromaTransform*;
 
 private:
     class ChromaTransformWrapper;
-    std::vector<ChromaTransformWrapper*> chromaTransforms;
-    std::mutex chromaTransformFactoryMutex;
+    std::vector<ChromaTransformWrapper*> chromaTransforms_;
+    std::mutex chromaTransformFactoryMutex_;
 };
 
 class ChromaTransformFactory::ChromaTransformWrapper {
 public:
-    ChromaTransformWrapper(unsigned int frameRate, const ChromaTransform* const transform);
+    ChromaTransformWrapper(unsigned int frameRate, const ChromaTransform* transform);
     ~ChromaTransformWrapper();
-    const ChromaTransform* getChromaTransform() const;
-    unsigned int getFrameRate() const;
+    [[nodiscard]] auto getChromaTransform() const -> const ChromaTransform*;
+    [[nodiscard]] auto getFrameRate() const -> unsigned int;
 
 private:
-    unsigned int frameRate;
-    const ChromaTransform* const chromaTransform;
+    unsigned int frameRate_;
+    const ChromaTransform* const chromaTransform_;
 };
 
 }

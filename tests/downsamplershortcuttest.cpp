@@ -50,7 +50,7 @@ TEST(DownsamplerShortcutTest, EverythingWorksWithShortcutFactor)
         }
     }
 
-    KeyFinder::LowPassFilter* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
+    auto* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
     KeyFinder::Workspace w;
     lpf->filter(a, w, factor);
     delete lpf;

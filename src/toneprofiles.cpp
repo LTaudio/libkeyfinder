@@ -31,7 +31,7 @@ ToneProfile::ToneProfile(const std::vector<double>& customProfile)
     }
 
     for (unsigned int o = 0; o < OCTAVES; o++) {
-        Binode<double>* tonic = new Binode<double>((double)customProfile[o * SEMITONES]);
+        auto* tonic = new Binode<double>((double)customProfile[o * SEMITONES]);
         Binode<double>* q = tonic;
         for (unsigned int i = 1; i < SEMITONES; i++) {
             q->r = new Binode<double>((double)customProfile[o * SEMITONES + i]);
@@ -46,7 +46,7 @@ ToneProfile::ToneProfile(const std::vector<double>& customProfile)
             tonic = tonic->r;
         }
 
-        tonics.push_back(tonic);
+        tonics_.push_back(tonic);
     }
 }
 
@@ -58,20 +58,21 @@ ToneProfile::~ToneProfile()
 void ToneProfile::free()
 {
     for (unsigned int o = 0; o < OCTAVES; o++) {
-        Binode<double>* p = tonics[o];
+        Binode<double>* p = tonics_[o];
         do {
             Binode<double>* zap = p;
             p = p->r;
             delete zap;
-        } while (p != tonics[o]);
+        } while (p != tonics_[o]);
     }
 }
 
-double ToneProfile::cosineSimilarity(const std::vector<double>& input, int offset) const
+auto ToneProfile::cosineSimilarity(const std::vector<double>& input, int offset) const -> double
 {
 
-    if (input.size() != BANDS)
+    if (input.size() != BANDS) {
         throw Exception("Chroma data must have 72 elements");
+    }
 
     double intersection = 0.0;
     double profileNorm = 0.0;
@@ -80,7 +81,7 @@ double ToneProfile::cosineSimilarity(const std::vector<double>& input, int offse
     for (unsigned int o = 0; o < OCTAVES; o++) {
         // Rotate starting pointer left for offset. Each step shifts the position
         // of the tonic one step further right of the starting pointer (or one semitone up).
-        Binode<double>* p = tonics[o];
+        Binode<double>* p = tonics_[o];
         for (int i = 0; i < offset; i++) {
             p = p->l;
         }
@@ -95,8 +96,7 @@ double ToneProfile::cosineSimilarity(const std::vector<double>& input, int offse
     if (profileNorm > 0 && inputNorm > 0) {
         // div by zero check
         return intersection / (sqrt(profileNorm) * sqrt(inputNorm));
-    } else {
-        return 0;
     }
+    return 0;
 }
 }

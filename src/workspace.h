@@ -35,9 +35,9 @@ public:
     ~Workspace();
     AudioData remainderBuffer;
     AudioData preprocessedBuffer;
-    Chromagram* chromagram;
-    FftAdapter* fftAdapter;
-    std::vector<double>* lpfBuffer;
+    Chromagram* chromagram { nullptr };
+    FftAdapter* fftAdapter { nullptr };
+    std::vector<double>* lpfBuffer { nullptr };
 };
 
 }

@@ -31,12 +31,12 @@ class KeyClassifier {
 public:
     KeyClassifier(const std::vector<double>& majorProfile, const std::vector<double>& minorProfile);
     ~KeyClassifier();
-    key_t classify(const std::vector<double>& chromaVector);
+    auto classify(const std::vector<double>& chromaVector) -> KeyT;
 
 private:
-    ToneProfile* major;
-    ToneProfile* minor;
-    ToneProfile* silence;
+    ToneProfile* major_;
+    ToneProfile* minor_;
+    ToneProfile* silence_;
 };
 
 }

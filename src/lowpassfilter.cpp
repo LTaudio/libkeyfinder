@@ -28,6 +28,8 @@
 
 #include "lowpassfilter.h"
 
+#include <math.h>
+
 // implementation specific
 #include "fftadapter.h"
 #include "windowfunctions.h"
@@ -52,9 +54,8 @@ LowPassFilter::LowPassFilter(unsigned int order, unsigned int frameRate, double 
 
 LowPassFilter::~LowPassFilter()
 {
-    if (priv != nullptr) {
-        delete priv;
-    }
+
+    delete priv;
 }
 
 void LowPassFilter::filter(AudioData& audio, Workspace& workspace, unsigned int shortcutFactor) const
@@ -62,7 +63,7 @@ void LowPassFilter::filter(AudioData& audio, Workspace& workspace, unsigned int 
     priv->filter(audio, workspace, shortcutFactor);
 }
 
-void const* LowPassFilter::getCoefficients() const
+auto LowPassFilter::getCoefficients() const -> void const*
 {
     return &priv->coefficients;
 }
@@ -79,7 +80,7 @@ LowPassFilterPrivate::LowPassFilterPrivate(unsigned int inOrder, unsigned int fr
     delay = order / 2;
     impulseLength = order + 1;
     double cutoffPoint = cornerFrequency / frameRate;
-    InverseFftAdapter* ifft = new InverseFftAdapter(fftFrameSize);
+    auto* ifft = new InverseFftAdapter(fftFrameSize);
 
     // Build frequency domain response
     double tau = 0.5 / cutoffPoint;
@@ -122,26 +123,26 @@ void LowPassFilterPrivate::filter(AudioData& audio, Workspace& workspace, unsign
 
     std::vector<double>* buffer = workspace.lpfBuffer;
 
-    if (buffer == NULL) {
+    if (buffer == nullptr) {
         workspace.lpfBuffer = new std::vector<double>(impulseLength, 0.0);
         buffer = workspace.lpfBuffer;
     } else {
         // clear delay buffer
-        std::vector<double>::iterator bufferIterator = buffer->begin();
+        auto bufferIterator = buffer->begin();
         while (bufferIterator < buffer->end()) {
             *bufferIterator = 0.0;
             std::advance(bufferIterator, 1);
         }
     }
 
-    std::vector<double>::iterator bufferFront = buffer->begin();
+    auto bufferFront = buffer->begin();
     std::vector<double>::iterator bufferBack;
     std::vector<double>::iterator bufferTemp;
 
     unsigned int sampleCount = audio.getSampleCount();
     audio.resetIterators();
 
-    double sum;
+    double sum = NAN;
     // for each frame (running off the end of the sample stream by delay)
     for (unsigned int inSample = 0; inSample < sampleCount + delay; inSample++) {
         // shuffle old samples along delay buffer
@@ -169,7 +170,7 @@ void LowPassFilterPrivate::filter(AudioData& audio, Workspace& workspace, unsign
         }
         sum = 0.0;
         bufferTemp = bufferFront;
-        std::vector<double>::const_iterator coefficientIterator = coefficients.begin();
+        auto coefficientIterator = coefficients.begin();
         while (coefficientIterator < coefficients.end()) {
             sum += *coefficientIterator * *bufferTemp;
             std::advance(coefficientIterator, 1);

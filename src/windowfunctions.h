@@ -28,9 +28,9 @@ namespace KeyFinder {
 
 class WindowFunction {
 public:
-    double window(temporal_window_t windowType, int sample, int width) const;
-    double gaussianWindow(int sample, int width, double sigma) const;
-    std::vector<double> convolve(const std::vector<double>& input, const std::vector<double>& window) const;
+    [[nodiscard]] static auto window(TemporalWindowT windowType, int n, int N) -> double;
+    [[nodiscard]] static auto gaussianWindow(int n, int N, double sigma) -> double;
+    [[nodiscard]] static auto convolve(const std::vector<double>& input, const std::vector<double>& window) -> std::vector<double>;
 };
 
 }

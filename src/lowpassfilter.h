@@ -35,7 +35,7 @@ public:
     LowPassFilter(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize);
     ~LowPassFilter();
     void filter(AudioData& audio, Workspace& workspace, unsigned int shortcutFactor = 1) const;
-    void const* getCoefficients() const; // for unit testing only
+    [[nodiscard]] auto getCoefficients() const -> void const*; // for unit testing only
 protected:
     LowPassFilterPrivate* priv;
 };

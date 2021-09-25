@@ -23,25 +23,25 @@
 
 namespace KeyFinder {
 
-double WindowFunction::window(temporal_window_t windowType, int n, int N) const
+auto WindowFunction::window(TemporalWindowT windowType, int n, int nn) -> double
 {
     switch (windowType) {
     case WINDOW_BLACKMAN:
-        return 0.42 - (0.5 * cos((2 * PI * n) / (N - 1))) + (0.08 * cos((4 * PI * n) / (N - 1)));
+        return 0.42 - (0.5 * cos((2 * PI * n) / (nn - 1))) + (0.08 * cos((4 * PI * n) / (nn - 1)));
     default:
         // This should be unreachable code, but just in case fall back to hamming window.
         // fall through
     case WINDOW_HAMMING:
-        return 0.54 - (0.46 * cos((2 * PI * n) / (N - 1)));
+        return 0.54 - (0.46 * cos((2 * PI * n) / (nn - 1)));
     }
 }
 
-double WindowFunction::gaussianWindow(int n, int N, double sigma) const
+auto WindowFunction::gaussianWindow(int n, int nn, double sigma) -> double
 {
-    return exp(-1 * (pow(n - (N / 2), 2) / (2 * sigma * sigma)));
+    return exp(-1 * (pow(n - (nn / 2), 2) / (2 * sigma * sigma)));
 }
 
-std::vector<double> WindowFunction::convolve(const std::vector<double>& input, const std::vector<double>& window) const
+auto WindowFunction::convolve(const std::vector<double>& input, const std::vector<double>& window) -> std::vector<double>
 {
 
     unsigned int inputSize = input.size();

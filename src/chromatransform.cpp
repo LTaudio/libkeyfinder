@@ -67,13 +67,13 @@ ChromaTransform::ChromaTransform(unsigned int inFrameRate)
     }
 }
 
-double ChromaTransform::kernelWindow(double n, double N) const
+auto ChromaTransform::kernelWindow(double n, double nn) -> double
 {
     // discretely sampled continuous function, but different to other window functions
-    return 1.0 - cos((2 * PI * n) / N);
+    return 1.0 - cos((2 * PI * n) / nn);
 }
 
-std::vector<double> ChromaTransform::chromaVector(const FftAdapter* const fftAdapter) const
+auto ChromaTransform::chromaVector(const FftAdapter* const fftAdapter) const -> std::vector<double>
 {
     std::vector<double> chromaVector(BANDS);
     for (unsigned int i = 0; i < BANDS; i++) {

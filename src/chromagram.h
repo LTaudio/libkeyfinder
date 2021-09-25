@@ -31,12 +31,12 @@ public:
     Chromagram(unsigned int hops = 0);
     void append(const Chromagram& that);
     void setMagnitude(unsigned int hop, unsigned int band, double value);
-    double getMagnitude(unsigned int hop, unsigned int band) const;
-    unsigned int getHops() const;
-    std::vector<double> collapseToOneHop() const;
+    [[nodiscard]] auto getMagnitude(unsigned int hop, unsigned int band) const -> double;
+    [[nodiscard]] auto getHops() const -> unsigned int;
+    [[nodiscard]] auto collapseToOneHop() const -> std::vector<double>;
 
 private:
-    std::vector<std::vector<double>> chromaData;
+    std::vector<std::vector<double>> chromaData_;
 };
 
 }

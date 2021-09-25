@@ -28,8 +28,8 @@ template <class T>
 class Binode {
 public:
     Binode(T x = 0)
-        : l(0)
-        , r(0)
+        : l(nullptr)
+        , r(nullptr)
         , data(x)
     {
     }

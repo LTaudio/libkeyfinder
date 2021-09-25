@@ -37,14 +37,14 @@ unsigned int filterFFT = 2048;
 
 TEST(LowPassFilterTest, InsistsOnEvenOrder)
 {
-    KeyFinder::LowPassFilter* lpf = NULL;
+    KeyFinder::LowPassFilter* lpf = nullptr;
     ASSERT_THROW(lpf = new KeyFinder::LowPassFilter(filterOrder + 1, frameRate, cornerFrequency, filterFFT), KeyFinder::Exception);
     ASSERT_EQ(NULL, lpf);
 }
 
 TEST(LowPassFilterTest, InsistsOnOrderNotGreaterThanOneQuarterFftFrameSize)
 {
-    KeyFinder::LowPassFilter* lpf = NULL;
+    KeyFinder::LowPassFilter* lpf = nullptr;
     ASSERT_THROW(lpf = new KeyFinder::LowPassFilter(514, frameRate, cornerFrequency, 2048), KeyFinder::Exception);
     ASSERT_EQ(NULL, lpf);
     ASSERT_NO_THROW(lpf = new KeyFinder::LowPassFilter(512, frameRate, cornerFrequency, 2048));
@@ -58,7 +58,7 @@ TEST(LowPassFilterTest, InsistsOnMonophonicAudio)
     a.setFrameRate(frameRate);
     a.addToSampleCount(frameRate);
 
-    KeyFinder::LowPassFilter* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
+    auto* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
     KeyFinder::Workspace w;
     ASSERT_THROW(lpf->filter(a, w), KeyFinder::Exception);
     a.reduceToMono();
@@ -73,9 +73,9 @@ TEST(LowPassFilterTest, InitialisesNullBuffer)
     a.setFrameRate(frameRate);
     a.addToSampleCount(frameRate);
 
-    KeyFinder::LowPassFilter* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
+    auto* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
     KeyFinder::Workspace w;
-    std::vector<double>* nullPtr = NULL;
+    std::vector<double>* nullPtr = nullptr;
     ASSERT_EQ(nullPtr, w.lpfBuffer);
     lpf->filter(a, w);
     ASSERT_NE(nullPtr, w.lpfBuffer);
@@ -88,7 +88,7 @@ TEST(LowPassFilterTest, DoesntAlterAudioMetadata)
     a.setFrameRate(frameRate);
     a.addToSampleCount(frameRate);
 
-    KeyFinder::LowPassFilter* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
+    auto* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
     KeyFinder::Workspace w;
     lpf->filter(a, w);
     delete lpf;
@@ -109,7 +109,7 @@ TEST(LowPassFilterTest, KillsHigherFreqs)
         a.setSample(i, sine_wave(i, highFrequency, frameRate, magnitude));
     }
 
-    KeyFinder::LowPassFilter* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
+    auto* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
     KeyFinder::Workspace w;
     lpf->filter(a, w);
     delete lpf;
@@ -131,7 +131,7 @@ TEST(LowPassFilterTest, MaintainsLowerFreqs)
         a.setSample(i, sine_wave(i, lowFrequency, frameRate, magnitude));
     }
 
-    KeyFinder::LowPassFilter* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
+    auto* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
     KeyFinder::Workspace w;
     lpf->filter(a, w);
     delete lpf;
@@ -157,7 +157,7 @@ TEST(LowPassFilterTest, DoesBothAtOnce)
         a.setSample(i, sample);
     }
 
-    KeyFinder::LowPassFilter* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
+    auto* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
     KeyFinder::Workspace w;
     lpf->filter(a, w);
     delete lpf;
@@ -188,7 +188,7 @@ TEST(LowPassFilterTest, WorksOnRepetitiveWaves)
         }
     }
 
-    KeyFinder::LowPassFilter* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
+    auto* lpf = new KeyFinder::LowPassFilter(filterOrder, frameRate, cornerFrequency, filterFFT);
     KeyFinder::Workspace w;
     lpf->filter(a, w);
     delete lpf;
@@ -202,8 +202,8 @@ TEST(LowPassFilterTest, WorksOnRepetitiveWaves)
 
 TEST(LowPassFilterTest, DefaultFilterMatchesFisherCoefficients)
 {
-    KeyFinder::LowPassFilter* lpf = new KeyFinder::LowPassFilter(160, 44100, 2000.0, 2048);
-    std::vector<double>* myCoeffs = (std::vector<double>*)lpf->getCoefficients();
+    auto* lpf = new KeyFinder::LowPassFilter(160, 44100, 2000.0, 2048);
+    auto* myCoeffs = (std::vector<double>*)lpf->getCoefficients();
 
     float fisherCoeffsFirstHalf[] = {
         -0.0022979864, -0.0014851155, -0.0005276345, +0.0005287637,

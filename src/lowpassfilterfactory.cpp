@@ -25,69 +25,68 @@ namespace KeyFinder {
 
 LowPassFilterFactory::LowPassFilterWrapper::LowPassFilterWrapper(unsigned int inOrder, unsigned int inFrameRate, double inCornerFrequency, unsigned int inFftFrameSize, const LowPassFilter* const inLowPassFilter)
 {
-    order = inOrder;
-    frameRate = inFrameRate;
-    cornerFrequency = inCornerFrequency;
-    fftFrameSize = inFftFrameSize;
-    lowPassFilter = inLowPassFilter;
+    order_ = inOrder;
+    frameRate_ = inFrameRate;
+    cornerFrequency_ = inCornerFrequency;
+    fftFrameSize_ = inFftFrameSize;
+    lowPassFilter_ = inLowPassFilter;
 }
 
 LowPassFilterFactory::LowPassFilterWrapper::~LowPassFilterWrapper()
 {
-    delete lowPassFilter;
+    delete lowPassFilter_;
 }
 
-const LowPassFilter* LowPassFilterFactory::LowPassFilterWrapper::getLowPassFilter() const
+auto LowPassFilterFactory::LowPassFilterWrapper::getLowPassFilter() const -> const LowPassFilter*
 {
-    return lowPassFilter;
+    return lowPassFilter_;
 }
 
-unsigned int LowPassFilterFactory::LowPassFilterWrapper::getOrder() const
+auto LowPassFilterFactory::LowPassFilterWrapper::getOrder() const -> unsigned int
 {
-    return order;
+    return order_;
 }
 
-unsigned int LowPassFilterFactory::LowPassFilterWrapper::getFrameRate() const
+auto LowPassFilterFactory::LowPassFilterWrapper::getFrameRate() const -> unsigned int
 {
-    return frameRate;
+    return frameRate_;
 }
 
-double LowPassFilterFactory::LowPassFilterWrapper::getCornerFrequency() const
+auto LowPassFilterFactory::LowPassFilterWrapper::getCornerFrequency() const -> double
 {
-    return cornerFrequency;
+    return cornerFrequency_;
 }
 
-unsigned int LowPassFilterFactory::LowPassFilterWrapper::getFftFrameSize() const
+auto LowPassFilterFactory::LowPassFilterWrapper::getFftFrameSize() const -> unsigned int
 {
-    return fftFrameSize;
+    return fftFrameSize_;
 }
 
 LowPassFilterFactory::LowPassFilterFactory()
-    : lowPassFilters(0)
+    : lowPassFilters_(0)
 {
 }
 
 LowPassFilterFactory::~LowPassFilterFactory()
 {
-    for (unsigned int i = 0; i < lowPassFilters.size(); i++) {
-        delete lowPassFilters[i];
+    for (auto& lowPassFilter : lowPassFilters_) {
+        delete lowPassFilter;
     }
 }
 
-const LowPassFilter* LowPassFilterFactory::getLowPassFilter(unsigned int inOrder, unsigned int inFrameRate, double inCornerFrequency, unsigned int inFftFrameSize)
+auto LowPassFilterFactory::getLowPassFilter(unsigned int inOrder, unsigned int inFrameRate, double inCornerFrequency, unsigned int inFftFrameSize) -> const LowPassFilter*
 {
-    for (unsigned int i = 0; i < lowPassFilters.size(); i++) {
-        LowPassFilterWrapper* wrapper = lowPassFilters[i];
+    for (auto* wrapper : lowPassFilters_) {
         if (wrapper->getOrder() == inOrder && wrapper->getFrameRate() == inFrameRate && wrapper->getCornerFrequency() == inCornerFrequency && wrapper->getFftFrameSize() == inFftFrameSize) {
             return wrapper->getLowPassFilter();
         }
     }
-    lowPassFilterFactoryMutex.lock();
-    LowPassFilter* lpf = new LowPassFilter(inOrder, inFrameRate, inCornerFrequency, inFftFrameSize);
-    lowPassFilters.push_back(new LowPassFilterWrapper(inOrder, inFrameRate, inCornerFrequency, inFftFrameSize, lpf));
-    unsigned int newLowPassFilterIndex = lowPassFilters.size() - 1;
-    lowPassFilterFactoryMutex.unlock();
-    return lowPassFilters[newLowPassFilterIndex]->getLowPassFilter();
+    lowPassFilterFactoryMutex_.lock();
+    auto* lpf = new LowPassFilter(inOrder, inFrameRate, inCornerFrequency, inFftFrameSize);
+    lowPassFilters_.push_back(new LowPassFilterWrapper(inOrder, inFrameRate, inCornerFrequency, inFftFrameSize, lpf));
+    unsigned int newLowPassFilterIndex = lowPassFilters_.size() - 1;
+    lowPassFilterFactoryMutex_.unlock();
+    return lowPassFilters_[newLowPassFilterIndex]->getLowPassFilter();
 }
 
 }

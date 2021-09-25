@@ -30,26 +30,26 @@ class AudioData {
 public:
     AudioData();
 
-    unsigned int getChannels() const;
-    unsigned int getFrameRate() const;
-    double getSample(unsigned int index) const;
-    double getSampleByFrame(unsigned int frame, unsigned int channel) const;
-    double getSampleAtReadIterator() const;
-    unsigned int getSampleCount() const;
-    unsigned int getFrameCount() const;
+    [[nodiscard]] auto getChannels() const -> unsigned int;
+    [[nodiscard]] auto getFrameRate() const -> unsigned int;
+    [[nodiscard]] auto getSample(unsigned int index) const -> double;
+    [[nodiscard]] auto getSampleByFrame(unsigned int frame, unsigned int channel) const -> double;
+    [[nodiscard]] auto getSampleAtReadIterator() const -> double;
+    [[nodiscard]] auto getSampleCount() const -> unsigned int;
+    [[nodiscard]] auto getFrameCount() const -> unsigned int;
 
-    void setChannels(unsigned int newChannels);
-    void setFrameRate(unsigned int newFrameRate);
+    void setChannels(unsigned int inChannels);
+    void setFrameRate(unsigned int inFrameRate);
     void setSample(unsigned int index, double value);
     void setSampleByFrame(unsigned int frame, unsigned int channels, double value);
     void setSampleAtWriteIterator(double value);
-    void addToSampleCount(unsigned int newSamples);
-    void addToFrameCount(unsigned int newFrames);
+    void addToSampleCount(unsigned int inSamples);
+    void addToFrameCount(unsigned int inFrames);
 
     void advanceReadIterator(unsigned int by = 1);
     void advanceWriteIterator(unsigned int by = 1);
-    bool readIteratorWithinUpperBound() const;
-    bool writeIteratorWithinUpperBound() const;
+    [[nodiscard]] auto readIteratorWithinUpperBound() const -> bool;
+    [[nodiscard]] auto writeIteratorWithinUpperBound() const -> bool;
     void resetIterators();
 
     void append(const AudioData& that);
@@ -57,14 +57,14 @@ public:
     void discardFramesFromFront(unsigned int discardFrameCount);
     void reduceToMono();
     void downsample(unsigned int factor, bool shortcut = true);
-    AudioData* sliceSamplesFromBack(unsigned int sliceSampleCount);
+    auto sliceSamplesFromBack(unsigned int sliceSampleCount) -> AudioData*;
 
 private:
-    std::deque<double> samples;
-    unsigned int channels;
-    unsigned int frameRate;
-    std::deque<double>::const_iterator readIterator;
-    std::deque<double>::iterator writeIterator;
+    std::deque<double> samples_;
+    unsigned int channels_ { 0 };
+    unsigned int frameRate_ { 0 };
+    std::deque<double>::const_iterator readIterator_;
+    std::deque<double>::iterator writeIterator_;
 };
 
 }

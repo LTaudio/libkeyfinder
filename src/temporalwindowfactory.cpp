@@ -26,49 +26,48 @@ namespace KeyFinder {
 TemporalWindowFactory::TemporalWindowWrapper::TemporalWindowWrapper(unsigned int frameSize)
 {
     WindowFunction win;
-    temporalWindow.resize(frameSize);
-    std::vector<double>::iterator twIt = temporalWindow.begin();
+    temporalWindow_.resize(frameSize);
+    auto twIt = temporalWindow_.begin();
     for (unsigned int i = 0; i < frameSize; i++) {
         *twIt = win.window(WINDOW_BLACKMAN, i, frameSize);
         std::advance(twIt, 1);
     }
 }
 
-unsigned int TemporalWindowFactory::TemporalWindowWrapper::getFrameSize() const
+auto TemporalWindowFactory::TemporalWindowWrapper::getFrameSize() const -> unsigned int
 {
-    return temporalWindow.size();
+    return temporalWindow_.size();
 }
 
-const std::vector<double>* TemporalWindowFactory::TemporalWindowWrapper::getTemporalWindow() const
+auto TemporalWindowFactory::TemporalWindowWrapper::getTemporalWindow() const -> const std::vector<double>*
 {
-    return &temporalWindow;
+    return &temporalWindow_;
 }
 
 TemporalWindowFactory::TemporalWindowFactory()
-    : temporalWindows(0)
+    : temporalWindows_(0)
 {
 }
 
 TemporalWindowFactory::~TemporalWindowFactory()
 {
-    for (unsigned int i = 0; i < temporalWindows.size(); i++) {
-        delete temporalWindows[i];
+    for (auto& temporalWindow : temporalWindows_) {
+        delete temporalWindow;
     }
 }
 
-const std::vector<double>* TemporalWindowFactory::getTemporalWindow(unsigned int frameSize)
+auto TemporalWindowFactory::getTemporalWindow(unsigned int frameSize) -> const std::vector<double>*
 {
-    for (unsigned int i = 0; i < temporalWindows.size(); i++) {
-        TemporalWindowWrapper* wrapper = temporalWindows[i];
+    for (auto* wrapper : temporalWindows_) {
         if (wrapper->getFrameSize() == frameSize) {
             return wrapper->getTemporalWindow();
         }
     }
-    temporalWindowFactoryMutex.lock();
-    temporalWindows.push_back(new TemporalWindowWrapper(frameSize));
-    unsigned int newTemporalWindowIndex = temporalWindows.size() - 1;
-    temporalWindowFactoryMutex.unlock();
-    return temporalWindows[newTemporalWindowIndex]->getTemporalWindow();
+    temporalWindowFactoryMutex_.lock();
+    temporalWindows_.push_back(new TemporalWindowWrapper(frameSize));
+    unsigned int newTemporalWindowIndex = temporalWindows_.size() - 1;
+    temporalWindowFactoryMutex_.unlock();
+    return temporalWindows_[newTemporalWindowIndex]->getTemporalWindow();
 }
 
 }

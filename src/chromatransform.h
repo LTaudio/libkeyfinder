@@ -30,13 +30,13 @@ namespace KeyFinder {
 class ChromaTransform {
 public:
     ChromaTransform(unsigned int frameRate);
-    std::vector<double> chromaVector(const FftAdapter* const fft) const;
+    auto chromaVector(const FftAdapter* fft) const -> std::vector<double>;
 
 protected:
     unsigned int frameRate;
     std::vector<std::vector<double>> directSpectralKernel;
     std::vector<unsigned int> chromaBandFftBinOffsets;
-    double kernelWindow(double n, double N) const;
+    [[nodiscard]] static auto kernelWindow(double n, double nn) -> double;
 };
 
 }

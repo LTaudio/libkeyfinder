@@ -21,11 +21,11 @@
 
 #include "_testhelpers.h"
 
-float sine_wave(
+auto sine_wave(
     unsigned int index,
     float frequency,
     unsigned int sampleRate,
-    unsigned int magnitude)
+    unsigned int magnitude) -> float
 {
     return magnitude * sin(index * frequency / sampleRate * 2.0 * PI);
 }

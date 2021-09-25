@@ -237,8 +237,8 @@ TEST_CASE("AudioDataTest/SliceFromBack")
     a.setChannels(1);
     a.setFrameRate(1);
 
-    KeyFinder::AudioData* b = NULL;
-    KeyFinder::AudioData* nullPtr = NULL;
+    KeyFinder::AudioData* b = nullptr;
+    KeyFinder::AudioData* nullPtr = nullptr;
 
     ASSERT_THROW(b = a.sliceSamplesFromBack(1), KeyFinder::Exception);
     ASSERT_EQ(nullPtr, b);
@@ -297,10 +297,12 @@ TEST_CASE("AudioDataTest/DownsamplerResamplesIntegralRelationship")
     a.setChannels(1);
     a.setFrameRate(100);
     a.addToSampleCount(10);
-    for (unsigned int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 5; i++) {
         a.setSample(i, 100.0);
-    for (unsigned int i = 5; i < 10; i++)
+    }
+    for (unsigned int i = 5; i < 10; i++) {
         a.setSample(i, 500.0);
+    }
 
     a.downsample(5);
 
@@ -316,12 +318,15 @@ TEST_CASE("AudioDataTest/DownsamplerResamplesNonintegralRelationship")
     a.setChannels(1);
     a.setFrameRate(100);
     a.addToSampleCount(12);
-    for (unsigned int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 5; i++) {
         a.setSample(i, 100.0);
-    for (unsigned int i = 5; i < 10; i++)
+    }
+    for (unsigned int i = 5; i < 10; i++) {
         a.setSample(i, 500.0);
-    for (unsigned int i = 10; i < 12; i++)
+    }
+    for (unsigned int i = 10; i < 12; i++) {
         a.setSample(i, 1000.0);
+    }
 
     a.downsample(5);
 
@@ -344,8 +349,9 @@ TEST_CASE("AudioDataTest/DownsamplerResamplesSineWave")
     a.setChannels(1);
     a.setFrameRate(frameRate);
     a.addToSampleCount(frames);
-    for (unsigned int i = 0; i < frames; i++)
+    for (unsigned int i = 0; i < frames; i++) {
         a.setSample(i, sine_wave(i, freq, frameRate, magnitude));
+    }
 
     a.downsample(factor);
 

@@ -35,21 +35,21 @@ public:
     // for progressive analysis
     void progressiveChromagram(AudioData audio, Workspace& workspace);
     void finalChromagram(Workspace& workspace);
-    key_t keyOfChromagram(const Workspace& workspace) const;
+    [[nodiscard]] static auto keyOfChromagram(const Workspace& workspace) -> KeyT;
 
     // for analysis of a whole audio file
-    key_t keyOfAudio(const AudioData& audio);
+    auto keyOfAudio(const AudioData& audio) -> KeyT;
 
     // for experimentation with alternative tone profiles
-    key_t keyOfChromaVector(const std::vector<double>& chromaVector, const std::vector<double>& overrideMajorProfile, const std::vector<double>& overrideMinorProfile) const;
+    [[nodiscard]] static auto keyOfChromaVector(const std::vector<double>& chromaVector, const std::vector<double>& overrideMajorProfile, const std::vector<double>& overrideMinorProfile) -> KeyT;
 
 private:
     void preprocess(AudioData& workingAudio, Workspace& workspace, bool flushRemainderBuffer = false);
     void chromagramOfBufferedAudio(Workspace& workspace);
-    key_t keyOfChromaVector(const std::vector<double>& chromaVector) const;
-    LowPassFilterFactory lpfFactory;
-    ChromaTransformFactory ctFactory;
-    TemporalWindowFactory twFactory;
+    [[nodiscard]] static auto keyOfChromaVector(const std::vector<double>& chromaVector) -> KeyT;
+    LowPassFilterFactory lpfFactory_;
+    ChromaTransformFactory ctFactory_;
+    TemporalWindowFactory twFactory_;
 };
 
 }

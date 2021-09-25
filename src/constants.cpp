@@ -23,7 +23,7 @@
 
 namespace KeyFinder {
 
-static double FREQUENCIES[] = {
+static double frequencies[] = {
     32.7031956625748,
     34.647828872109,
     36.708095989676,
@@ -98,22 +98,22 @@ static double FREQUENCIES[] = {
     1975.5332050245
 };
 
-double getFrequencyOfBand(unsigned int band)
+auto getFrequencyOfBand(unsigned int band) -> double
 {
     if (band >= BANDS) {
         std::ostringstream ss;
         ss << "Cannot get frequency of out-of-bounds band index (" << band << "/" << BANDS << ")";
         throw Exception(ss.str().c_str());
     }
-    return FREQUENCIES[band];
+    return frequencies[band];
 }
 
-double getLastFrequency()
+auto getLastFrequency() -> double
 {
-    return FREQUENCIES[BANDS - 1];
+    return frequencies[BANDS - 1];
 }
 
-static double MAJOR_PROFILE[SEMITONES] = {
+static double majorProfile[SEMITONES] = {
     7.23900502618145225142,
     3.50351166725158691406,
     3.58445177536649417505,
@@ -128,7 +128,7 @@ static double MAJOR_PROFILE[SEMITONES] = {
     4.45932757378886890365,
 };
 
-static double MINOR_PROFILE[SEMITONES] = {
+static double minorProfile[SEMITONES] = {
     7.00255045060284420089,
     3.14360279015996679775,
     4.35904319714962529275,
@@ -143,7 +143,7 @@ static double MINOR_PROFILE[SEMITONES] = {
     3.83242038595048351013,
 };
 
-static double OCTAVE_WEIGHTS[OCTAVES] = {
+static double octaveWeights[OCTAVES] = {
     0.39997267549999998559,
     0.55634425248300645173,
     0.52496636345143543600,
@@ -155,24 +155,24 @@ static double OCTAVE_WEIGHTS[OCTAVES] = {
 static std::vector<double> tpMajor;
 static std::vector<double> tpMinor;
 
-const std::vector<double>& toneProfileMajor()
+auto toneProfileMajor() -> const std::vector<double>&
 {
-    if (tpMajor.size() == 0) {
-        for (unsigned int o = 0; o < OCTAVES; o++) {
-            for (unsigned int s = 0; s < SEMITONES; s++) {
-                tpMajor.push_back(OCTAVE_WEIGHTS[o] * MAJOR_PROFILE[s]);
+    if (tpMajor.empty()) {
+        for (double o : octaveWeights) {
+            for (double s : majorProfile) {
+                tpMajor.push_back(o * s);
             }
         }
     }
     return tpMajor;
 }
 
-const std::vector<double>& toneProfileMinor()
+auto toneProfileMinor() -> const std::vector<double>&
 {
-    if (tpMinor.size() == 0) {
-        for (unsigned int o = 0; o < OCTAVES; o++) {
-            for (unsigned int s = 0; s < SEMITONES; s++) {
-                tpMinor.push_back(OCTAVE_WEIGHTS[o] * MINOR_PROFILE[s]);
+    if (tpMinor.empty()) {
+        for (double o : octaveWeights) {
+            for (double s : minorProfile) {
+                tpMinor.push_back(o * s);
             }
         }
     }

@@ -31,11 +31,11 @@ class ToneProfile {
 public:
     ToneProfile(const std::vector<double>& customProfile);
     ~ToneProfile();
-    double cosineSimilarity(const std::vector<double>& chromaVector, int offset) const;
+    [[nodiscard]] auto cosineSimilarity(const std::vector<double>& input, int offset) const -> double;
 
 private:
     void free();
-    std::vector<Binode<double>*> tonics;
+    std::vector<Binode<double>*> tonics_;
 };
 
 }

@@ -57,7 +57,7 @@ FftAdapter::~FftAdapter()
     delete priv;
 }
 
-unsigned int FftAdapter::getFrameSize() const
+auto FftAdapter::getFrameSize() const -> unsigned int
 {
     return frameSize;
 }
@@ -75,7 +75,7 @@ void FftAdapter::setInput(unsigned int i, double real)
     priv->inputReal[i] = real;
 }
 
-double FftAdapter::getOutputReal(unsigned int i) const
+auto FftAdapter::getOutputReal(unsigned int i) const -> double
 {
     if (i >= frameSize) {
         std::ostringstream ss;
@@ -85,7 +85,7 @@ double FftAdapter::getOutputReal(unsigned int i) const
     return priv->outputComplex[i][0];
 }
 
-double FftAdapter::getOutputImaginary(unsigned int i) const
+auto FftAdapter::getOutputImaginary(unsigned int i) const -> double
 {
     if (i >= frameSize) {
         std::ostringstream ss;
@@ -95,7 +95,7 @@ double FftAdapter::getOutputImaginary(unsigned int i) const
     return priv->outputComplex[i][1];
 }
 
-double FftAdapter::getOutputMagnitude(unsigned int i) const
+auto FftAdapter::getOutputMagnitude(unsigned int i) const -> double
 {
     if (i >= frameSize) {
         std::ostringstream ss;
@@ -138,7 +138,7 @@ InverseFftAdapter::~InverseFftAdapter()
     delete priv;
 }
 
-unsigned int InverseFftAdapter::getFrameSize() const
+auto InverseFftAdapter::getFrameSize() const -> unsigned int
 {
     return frameSize;
 }
@@ -157,7 +157,7 @@ void InverseFftAdapter::setInput(unsigned int i, double real, double imag)
     priv->inputComplex[i][1] = imag;
 }
 
-double InverseFftAdapter::getOutput(unsigned int i) const
+auto InverseFftAdapter::getOutput(unsigned int i) const -> double
 {
     if (i >= frameSize) {
         std::ostringstream ss;

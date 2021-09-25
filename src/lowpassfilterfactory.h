@@ -31,30 +31,30 @@ class LowPassFilterFactory {
 public:
     LowPassFilterFactory();
     ~LowPassFilterFactory();
-    const LowPassFilter* getLowPassFilter(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize);
+    auto getLowPassFilter(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize) -> const LowPassFilter*;
 
 private:
     class LowPassFilterWrapper;
-    std::vector<LowPassFilterWrapper*> lowPassFilters;
-    std::mutex lowPassFilterFactoryMutex;
+    std::vector<LowPassFilterWrapper*> lowPassFilters_;
+    std::mutex lowPassFilterFactoryMutex_;
 };
 
 class LowPassFilterFactory::LowPassFilterWrapper {
 public:
-    LowPassFilterWrapper(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize, const LowPassFilter* const filter);
+    LowPassFilterWrapper(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize, const LowPassFilter* filter);
     ~LowPassFilterWrapper();
-    const LowPassFilter* getLowPassFilter() const;
-    unsigned int getOrder() const;
-    unsigned int getFrameRate() const;
-    double getCornerFrequency() const;
-    unsigned int getFftFrameSize() const;
+    [[nodiscard]] auto getLowPassFilter() const -> const LowPassFilter*;
+    [[nodiscard]] auto getOrder() const -> unsigned int;
+    [[nodiscard]] auto getFrameRate() const -> unsigned int;
+    [[nodiscard]] auto getCornerFrequency() const -> double;
+    [[nodiscard]] auto getFftFrameSize() const -> unsigned int;
 
 private:
-    unsigned int order;
-    unsigned int frameRate;
-    double cornerFrequency;
-    unsigned int fftFrameSize;
-    const LowPassFilter* lowPassFilter;
+    unsigned int order_;
+    unsigned int frameRate_;
+    double cornerFrequency_;
+    unsigned int fftFrameSize_;
+    const LowPassFilter* lowPassFilter_;
 };
 
 }

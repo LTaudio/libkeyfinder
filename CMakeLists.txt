@@ -1,113 +1,57 @@
 cmake_minimum_required(VERSION 3.4)
 project(KeyFinder VERSION 2.2.5)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-option(BUILD_SHARED_LIBS "Build dynamic library" ON)
+# Only do these if this is the main project,
+# and not if it is included through add_subdirectory.
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    # Caches build artifacts for faster builds
+    find_program(CCACHE ccache)
+    if (CCACHE)
+        set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+    endif ()
 
-add_library(keyfinder
-  src/audiodata.cpp
-  src/chromagram.cpp
-  src/chromatransform.cpp
-  src/chromatransformfactory.cpp
-  src/fftadapter.cpp
-  src/keyclassifier.cpp
-  src/keyfinder.cpp
-  src/lowpassfilter.cpp
-  src/lowpassfilterfactory.cpp
-  src/spectrumanalyser.cpp
-  src/temporalwindowfactory.cpp
-  src/toneprofiles.cpp
-  src/windowfunctions.cpp
-  src/workspace.cpp
-  src/constants.cpp
-)
+    # Set C11 with no extensions enabled. Fail if the
+    # standard is not supported.
+    set(CMAKE_C_STANDARD 11)
+    set(CMAKE_C_STANDARD_REQUIRED ON)
+    set(CMAKE_C_EXTENSIONS OFF)
 
-set_target_properties(keyfinder PROPERTIES
-	SOVERSION ${PROJECT_VERSION_MAJOR}
-	VERSION ${PROJECT_VERSION})
+    # Set C++17 with no extensions enabled. Fail if the
+    # standard is not supported.
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package(FFTW3 REQUIRED)
+
+add_library(keyfinder)
+add_library(lt::KeyFinder ALIAS keyfinder)
+set_target_properties(keyfinder PROPERTIES VERSION ${PROJECT_VERSION})
 target_link_libraries(keyfinder PUBLIC FFTW3::fftw3)
-
-target_include_directories(keyfinder PUBLIC
-   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+target_include_directories(keyfinder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_sources(keyfinder
+  PRIVATE
+    src/audiodata.cpp
+    src/chromagram.cpp
+    src/chromatransform.cpp
+    src/chromatransformfactory.cpp
+    src/fftadapter.cpp
+    src/keyclassifier.cpp
+    src/keyfinder.cpp
+    src/lowpassfilter.cpp
+    src/lowpassfilterfactory.cpp
+    src/spectrumanalyser.cpp
+    src/temporalwindowfactory.cpp
+    src/toneprofiles.cpp
+    src/windowfunctions.cpp
+    src/workspace.cpp
+    src/constants.cpp
 )
 
-set_target_properties(keyfinder PROPERTIES
-  WINDOWS_EXPORT_ALL_SYMBOLS TRUE
-)
-
-#
-# Installation
-#
-include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
-
-# Library
-install(TARGETS keyfinder
-  EXPORT KeyFinderTargets
-  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-  INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-)
-
-# Headers
-install(FILES
-  src/audiodata.h
-  src/chromagram.h
-  src/chromatransform.h
-  src/chromatransformfactory.h
-  src/fftadapter.h
-  src/keyclassifier.h
-  src/keyfinder.h
-  src/lowpassfilter.h
-  src/lowpassfilterfactory.h
-  src/spectrumanalyser.h
-  src/temporalwindowfactory.h
-  src/toneprofiles.h
-  src/windowfunctions.h
-  src/workspace.h
-  src/constants.h
-  src/exception.h
-  src/binode.h
-  DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/keyfinder")
-
-# pkgconfig
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/packaging/libkeyfinder.pc.in
-  ${CMAKE_CURRENT_BINARY_DIR}/packaging/libkeyfinder.pc @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/packaging/libkeyfinder.pc DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-
-# CMake config
-set(KEYFINDER_INSTALL_CMAKEDIR "lib/cmake/KeyFinder")
-install(
-  EXPORT KeyFinderTargets
-  FILE KeyFinderTargets.cmake
-  NAMESPACE KeyFinder::
-  DESTINATION "${KEYFINDER_INSTALL_CMAKEDIR}"
-)
-configure_package_config_file(packaging/KeyFinderConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/packaging/KeyFinderConfig.cmake"
-  INSTALL_DESTINATION "${KEYFINDER_INSTALL_CMAKEDIR}"
-)
-write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/packaging/KeyFinderConfigVersion.cmake"
-  VERSION "${CMAKE_PROJECT_VERSION}"
-  COMPATIBILITY SameMajorVersion
-)
-install(
-  FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/packaging/KeyFinderConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/packaging/KeyFinderConfigVersion.cmake"
-  DESTINATION "${KEYFINDER_INSTALL_CMAKEDIR}"
-)
-
-#
-# Tests
-#
 include(CTest)
 if(BUILD_TESTING)
   add_subdirectory(tests)

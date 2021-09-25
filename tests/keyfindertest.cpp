@@ -76,15 +76,16 @@ TEST(KeyFinderTest, ProgressiveUseCase)
 
     KeyFinder::KeyFinder k;
     KeyFinder::Workspace w;
-    KeyFinder::FftAdapter* testFftPointer = NULL;
+    KeyFinder::FftAdapter* testFftPointer = nullptr;
 
     k.progressiveChromagram(offset, w);
     ASSERT_EQ(4, w.remainderBuffer.getSampleCount());
     for (unsigned int i = 0; i < 10; i++) {
         k.progressiveChromagram(inputAudio, w);
         // ensure we're using the same FFT adapter throughout
-        if (testFftPointer == NULL)
+        if (testFftPointer == nullptr) {
             testFftPointer = w.fftAdapter;
+        }
         ASSERT_EQ(testFftPointer, w.fftAdapter);
         ASSERT_EQ(4410, w.preprocessedBuffer.getFrameRate());
         ASSERT_EQ(1, w.preprocessedBuffer.getChannels());

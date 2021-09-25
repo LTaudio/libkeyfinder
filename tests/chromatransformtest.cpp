@@ -23,7 +23,7 @@
 
 TEST(ChromaTransformTest, InsistsOnPositiveFrameRate)
 {
-    KeyFinder::ChromaTransform* ct = NULL;
+    KeyFinder::ChromaTransform* ct = nullptr;
     ASSERT_THROW(ct = new KeyFinder::ChromaTransform(0), KeyFinder::Exception);
     ASSERT_EQ(NULL, ct);
     ASSERT_NO_THROW(ct = new KeyFinder::ChromaTransform(4410));
@@ -33,7 +33,7 @@ TEST(ChromaTransformTest, InsistsOnPositiveFrameRate)
 TEST(ChromaTransformTest, InsistsOnNyquistHigherThanAnalysisFreqs)
 {
     float high = KeyFinder::getLastFrequency();
-    KeyFinder::ChromaTransform* ct = NULL;
+    KeyFinder::ChromaTransform* ct = nullptr;
     ASSERT_THROW(ct = new KeyFinder::ChromaTransform(high * 2 - 1), KeyFinder::Exception);
     ASSERT_EQ(NULL, ct);
     ASSERT_NO_THROW(ct = new KeyFinder::ChromaTransform(high * 2 + 1));
@@ -42,7 +42,7 @@ TEST(ChromaTransformTest, InsistsOnNyquistHigherThanAnalysisFreqs)
 
 TEST(ChromaTransformTest, InsistsOnSufficientBassResolution)
 {
-    KeyFinder::ChromaTransform* ct = NULL;
+    KeyFinder::ChromaTransform* ct = nullptr;
     ASSERT_THROW(ct = new KeyFinder::ChromaTransform(31861), KeyFinder::Exception);
     ASSERT_EQ(NULL, ct);
     ASSERT_NO_THROW(ct = new KeyFinder::ChromaTransform(31860));
@@ -56,8 +56,8 @@ public:
         : KeyFinder::ChromaTransform(f)
     {
     }
-    std::vector<unsigned int> getChromaBandFftBinOffsets() { return chromaBandFftBinOffsets; }
-    std::vector<std::vector<double>> getDirectSpectralKernel() { return directSpectralKernel; }
+    auto getChromaBandFftBinOffsets() -> std::vector<unsigned int> { return chromaBandFftBinOffsets; }
+    auto getDirectSpectralKernel() -> std::vector<std::vector<double>> { return directSpectralKernel; }
 };
 
 /*TEST (ChromaTransformTest, TestSpectralKernel) {

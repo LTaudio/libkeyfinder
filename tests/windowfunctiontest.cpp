@@ -30,17 +30,19 @@ TEST(WindowFunctionTest, AllTemporalWindowsAreSymmetricalAndRangeFrom0To1)
 
     for (unsigned int w = 0; w < 4; w++) {
 
-        KeyFinder::temporal_window_t type;
-        if (w % 2 == 0)
+        auto type = KeyFinder::TemporalWindowT {};
+        if (w % 2 == 0) {
             type = KeyFinder::WINDOW_BLACKMAN;
-        else
+        } else {
             type = KeyFinder::WINDOW_HAMMING;
+        }
 
-        unsigned int width;
-        if (w / 2 == 0)
+        unsigned int width = 0;
+        if (w / 2 == 0) {
             width = evenWidth;
-        else
+        } else {
             width = oddWidth;
+        }
 
         ASSERT_NEAR(0.0, win.window(type, 0, width), 0.1);
         ASSERT_NEAR(1.0, win.window(type, width / 2, width), 0.1);
@@ -56,14 +58,17 @@ TEST(WindowFunctionTest, GaussianFn)
     KeyFinder::WindowFunction win;
     unsigned int width = 23;
     std::vector<double> g(width, 0.0);
-    for (unsigned int i = 0; i < width; i++)
+    for (unsigned int i = 0; i < width; i++) {
         g[i] = win.gaussianWindow(i, width, sqrt(12.0));
+    }
     ASSERT_NEAR(0.0, g[0], 0.01);
-    for (unsigned int i = 1; i < width / 2; i++)
+    for (unsigned int i = 1; i < width / 2; i++) {
         ASSERT_GT(g[i], g[i - 1]);
+    }
     ASSERT_FLOAT_EQ(1.0, g[width / 2]);
-    for (unsigned int i = width / 2 + 1; i < width; i++)
+    for (unsigned int i = width / 2 + 1; i < width; i++) {
         ASSERT_LT(g[i], g[i - 1]);
+    }
     ASSERT_NEAR(0.0, g[width - 1], 0.01);
 }
 
@@ -100,8 +105,9 @@ TEST(WindowFunctionTest, ConvolutionOfPulseAndCurve)
     std::vector<double> a(width, 0.0);
     a[width / 2] = 1.0;
     std::vector<double> b(width, 0.0);
-    for (unsigned int i = 0; i < width; i++)
+    for (unsigned int i = 0; i < width; i++) {
         b[i] = win.window(KeyFinder::WINDOW_BLACKMAN, i, width);
+    }
     std::vector<double> c = win.convolve(a, b);
     for (unsigned int i = 0; i < width; i++) {
         float a = c[i];

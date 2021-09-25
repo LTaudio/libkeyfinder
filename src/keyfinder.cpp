@@ -23,7 +23,7 @@
 
 namespace KeyFinder {
 
-key_t KeyFinder::keyOfAudio(const AudioData& originalAudio)
+auto KeyFinder::keyOfAudio(const AudioData& originalAudio) -> KeyT
 {
 
     Workspace workspace;
@@ -76,7 +76,7 @@ void KeyFinder::preprocess(AudioData& workingAudio, Workspace& workspace, bool f
         delete remainder;
     }
 
-    const LowPassFilter* lpf = lpfFactory.getLowPassFilter(160, workingAudio.getFrameRate(), lpfCutoff, 2048);
+    const LowPassFilter* lpf = lpfFactory_.getLowPassFilter(160, workingAudio.getFrameRate(), lpfCutoff, 2048);
     lpf->filter(workingAudio, workspace, downsampleFactor);
     // note we don't delete the LPF; it's stored in the factory for reuse
 
@@ -85,13 +85,13 @@ void KeyFinder::preprocess(AudioData& workingAudio, Workspace& workspace, bool f
 
 void KeyFinder::chromagramOfBufferedAudio(Workspace& workspace)
 {
-    if (workspace.fftAdapter == NULL) {
+    if (workspace.fftAdapter == nullptr) {
         workspace.fftAdapter = new FftAdapter(FFTFRAMESIZE);
     }
-    SpectrumAnalyser sa(workspace.preprocessedBuffer.getFrameRate(), &ctFactory, &twFactory);
+    SpectrumAnalyser sa(workspace.preprocessedBuffer.getFrameRate(), &ctFactory_, &twFactory_);
     Chromagram* c = sa.chromagramOfWholeFrames(workspace.preprocessedBuffer, workspace.fftAdapter);
     workspace.preprocessedBuffer.discardFramesFromFront(HOPSIZE * c->getHops());
-    if (workspace.chromagram == NULL) {
+    if (workspace.chromagram == nullptr) {
         workspace.chromagram = c;
     } else {
         workspace.chromagram->append(*c);
@@ -99,19 +99,19 @@ void KeyFinder::chromagramOfBufferedAudio(Workspace& workspace)
     }
 }
 
-key_t KeyFinder::keyOfChromaVector(const std::vector<double>& chromaVector) const
+auto KeyFinder::keyOfChromaVector(const std::vector<double>& chromaVector) -> KeyT
 {
     KeyClassifier classifier(toneProfileMajor(), toneProfileMinor());
     return classifier.classify(chromaVector);
 }
 
-key_t KeyFinder::keyOfChromaVector(const std::vector<double>& chromaVector, const std::vector<double>& overrideMajorProfile, const std::vector<double>& overrideMinorProfile) const
+auto KeyFinder::keyOfChromaVector(const std::vector<double>& chromaVector, const std::vector<double>& overrideMajorProfile, const std::vector<double>& overrideMinorProfile) -> KeyT
 {
     KeyClassifier classifier(overrideMajorProfile, overrideMinorProfile);
     return classifier.classify(chromaVector);
 }
 
-key_t KeyFinder::keyOfChromagram(const Workspace& workspace) const
+auto KeyFinder::keyOfChromagram(const Workspace& workspace) -> KeyT
 {
     KeyClassifier classifier(toneProfileMajor(), toneProfileMinor());
     return classifier.classify(workspace.chromagram->collapseToOneHop());

@@ -21,6 +21,8 @@
 
 #include "keyclassifier.h"
 
+#include <math.h>
+
 namespace KeyFinder {
 
 KeyClassifier::KeyClassifier(const std::vector<double>& majorProfile, const std::vector<double>& minorProfile)
@@ -34,36 +36,36 @@ KeyClassifier::KeyClassifier(const std::vector<double>& majorProfile, const std:
         throw Exception("Tone profile must have 72 elements");
     }
 
-    major = new ToneProfile(majorProfile);
-    minor = new ToneProfile(minorProfile);
-    silence = new ToneProfile(std::vector<double>(BANDS, 0.0));
+    major_ = new ToneProfile(majorProfile);
+    minor_ = new ToneProfile(minorProfile);
+    silence_ = new ToneProfile(std::vector<double>(BANDS, 0.0));
 }
 
 KeyClassifier::~KeyClassifier()
 {
-    delete major;
-    delete minor;
-    delete silence;
+    delete major_;
+    delete minor_;
+    delete silence_;
 }
 
-key_t KeyClassifier::classify(const std::vector<double>& chromaVector)
+auto KeyClassifier::classify(const std::vector<double>& chromaVector) -> KeyT
 {
     std::vector<double> scores(24);
     double bestScore = 0.0;
     for (unsigned int i = 0; i < SEMITONES; i++) {
-        double score;
-        score = major->cosineSimilarity(chromaVector, i); // major
+        double score = NAN;
+        score = major_->cosineSimilarity(chromaVector, i); // major
         scores[i * 2] = score;
-        score = minor->cosineSimilarity(chromaVector, i); // minor
+        score = minor_->cosineSimilarity(chromaVector, i); // minor
         scores[(i * 2) + 1] = score;
     }
-    bestScore = silence->cosineSimilarity(chromaVector, 0);
+    bestScore = silence_->cosineSimilarity(chromaVector, 0);
     // find best match, defaulting to silence
-    key_t bestMatch = SILENCE;
+    KeyT bestMatch = SILENCE;
     for (unsigned int i = 0; i < 24; i++) {
         if (scores[i] > bestScore) {
             bestScore = scores[i];
-            bestMatch = (key_t)i;
+            bestMatch = (KeyT)i;
         }
     }
     return bestMatch;

@@ -57,7 +57,7 @@
 
 namespace KeyFinder {
 
-enum key_t {
+enum KeyT {
     A_MAJOR = 0,
     A_MINOR,
     B_FLAT_MAJOR,
@@ -85,21 +85,21 @@ enum key_t {
     SILENCE = 24
 };
 
-enum temporal_window_t {
+enum TemporalWindowT {
     WINDOW_BLACKMAN,
     WINDOW_HAMMING
 };
 
-enum scale_t {
+enum ScaleT {
     SCALE_MAJOR,
     SCALE_MINOR
 };
 
-double getFrequencyOfBand(unsigned int band);
-double getLastFrequency();
+auto getFrequencyOfBand(unsigned int band) -> double;
+auto getLastFrequency() -> double;
 
-const std::vector<double>& toneProfileMajor();
-const std::vector<double>& toneProfileMinor();
+auto toneProfileMajor() -> const std::vector<double>&;
+auto toneProfileMinor() -> const std::vector<double>&;
 }
 
 #endif

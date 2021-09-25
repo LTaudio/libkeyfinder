@@ -34,8 +34,8 @@ namespace KeyFinder {
 
 class SpectrumAnalyser {
 public:
-    SpectrumAnalyser(unsigned int frameRate, ChromaTransformFactory* ctFactory, TemporalWindowFactory* twFactory);
-    Chromagram* chromagramOfWholeFrames(AudioData& audio, FftAdapter* const fft) const;
+    SpectrumAnalyser(unsigned int frameRate, ChromaTransformFactory* spFactory, TemporalWindowFactory* twFactory);
+    auto chromagramOfWholeFrames(AudioData& audio, FftAdapter* fft) const -> Chromagram*;
 
 protected:
     const ChromaTransform* chromaTransform;

@@ -29,7 +29,7 @@ SpectrumAnalyser::SpectrumAnalyser(unsigned int frameRate, ChromaTransformFactor
     tw = twFactory->getTemporalWindow(FFTFRAMESIZE);
 }
 
-Chromagram* SpectrumAnalyser::chromagramOfWholeFrames(AudioData& audio, FftAdapter* const fftAdapter) const
+auto SpectrumAnalyser::chromagramOfWholeFrames(AudioData& audio, FftAdapter* const fftAdapter) const -> Chromagram*
 {
 
     if (audio.getChannels() != 1) {
@@ -42,14 +42,14 @@ Chromagram* SpectrumAnalyser::chromagramOfWholeFrames(AudioData& audio, FftAdapt
     }
 
     unsigned int hops = 1 + ((audio.getSampleCount() - frmSize) / HOPSIZE);
-    Chromagram* ch = new Chromagram(hops);
+    auto* ch = new Chromagram(hops);
 
     for (unsigned int hop = 0; hop < hops; hop++) {
 
         audio.resetIterators();
         audio.advanceReadIterator(hop * HOPSIZE);
 
-        std::vector<double>::const_iterator twIt = tw->begin();
+        auto twIt = tw->begin();
         for (unsigned int sample = 0; sample < frmSize; sample++) {
             fftAdapter->setInput(sample, audio.getSampleAtReadIterator() * *twIt);
             audio.advanceReadIterator();
@@ -59,7 +59,7 @@ Chromagram* SpectrumAnalyser::chromagramOfWholeFrames(AudioData& audio, FftAdapt
         fftAdapter->execute();
 
         std::vector<double> cv = chromaTransform->chromaVector(fftAdapter);
-        std::vector<double>::const_iterator cvIt = cv.begin();
+        auto cvIt = cv.begin();
         for (unsigned int band = 0; band < BANDS; band++) {
             ch->setMagnitude(hop, band, *cvIt);
             std::advance(cvIt, 1);

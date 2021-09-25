@@ -31,22 +31,22 @@ class TemporalWindowFactory {
 public:
     TemporalWindowFactory();
     ~TemporalWindowFactory();
-    const std::vector<double>* getTemporalWindow(unsigned int frameSize);
+    auto getTemporalWindow(unsigned int frameSize) -> const std::vector<double>*;
 
 private:
     class TemporalWindowWrapper;
-    std::vector<TemporalWindowWrapper*> temporalWindows;
-    std::mutex temporalWindowFactoryMutex;
+    std::vector<TemporalWindowWrapper*> temporalWindows_;
+    std::mutex temporalWindowFactoryMutex_;
 };
 
 class TemporalWindowFactory::TemporalWindowWrapper {
 public:
     TemporalWindowWrapper(unsigned int frameSize);
-    unsigned int getFrameSize() const;
-    const std::vector<double>* getTemporalWindow() const;
+    [[nodiscard]] auto getFrameSize() const -> unsigned int;
+    [[nodiscard]] auto getTemporalWindow() const -> const std::vector<double>*;
 
 private:
-    std::vector<double> temporalWindow;
+    std::vector<double> temporalWindow_;
 };
 
 }

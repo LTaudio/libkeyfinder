@@ -24,15 +24,14 @@
 namespace KeyFinder {
 
 AudioData::AudioData()
-    : samples(0)
-    , channels(0)
-    , frameRate(0)
+    : samples_(0)
+
 {
 }
 
-unsigned int AudioData::getChannels() const
+auto AudioData::getChannels() const -> unsigned int
 {
-    return channels;
+    return channels_;
 }
 
 void AudioData::setChannels(unsigned int inChannels)
@@ -40,12 +39,12 @@ void AudioData::setChannels(unsigned int inChannels)
     if (inChannels < 1) {
         throw Exception("New channel count must be > 0");
     }
-    channels = inChannels;
+    channels_ = inChannels;
 }
 
-unsigned int AudioData::getFrameRate() const
+auto AudioData::getFrameRate() const -> unsigned int
 {
-    return frameRate;
+    return frameRate_;
 }
 
 void AudioData::setFrameRate(unsigned int inFrameRate)
@@ -53,64 +52,64 @@ void AudioData::setFrameRate(unsigned int inFrameRate)
     if (inFrameRate < 1) {
         throw Exception("New frame rate must be > 0");
     }
-    frameRate = inFrameRate;
+    frameRate_ = inFrameRate;
 }
 
 void AudioData::append(const AudioData& that)
 {
-    if (channels == 0 && frameRate == 0) {
-        channels = that.channels;
-        frameRate = that.frameRate;
+    if (channels_ == 0 && frameRate_ == 0) {
+        channels_ = that.channels_;
+        frameRate_ = that.frameRate_;
     }
-    if (that.channels != channels) {
+    if (that.channels_ != channels_) {
         throw Exception("Cannot append audio data with a different number of channels");
     }
-    if (that.frameRate != frameRate) {
+    if (that.frameRate_ != frameRate_) {
         throw Exception("Cannot append audio data with a different frame rate");
     }
-    samples.insert(samples.end(), that.samples.begin(), that.samples.end());
+    samples_.insert(samples_.end(), that.samples_.begin(), that.samples_.end());
 }
 
 void AudioData::prepend(const AudioData& that)
 {
-    if (channels == 0 && frameRate == 0) {
-        channels = that.channels;
-        frameRate = that.frameRate;
+    if (channels_ == 0 && frameRate_ == 0) {
+        channels_ = that.channels_;
+        frameRate_ = that.frameRate_;
     }
-    if (that.channels != channels) {
+    if (that.channels_ != channels_) {
         throw Exception("Cannot prepend audio data with a different number of channels");
     }
-    if (that.frameRate != frameRate) {
+    if (that.frameRate_ != frameRate_) {
         throw Exception("Cannot prepend audio data with a different frame rate");
     }
-    samples.insert(samples.begin(), that.samples.begin(), that.samples.end());
+    samples_.insert(samples_.begin(), that.samples_.begin(), that.samples_.end());
 }
 
 // get sample by absolute index
-double AudioData::getSample(unsigned int index) const
+auto AudioData::getSample(unsigned int index) const -> double
 {
     if (index >= getSampleCount()) {
         std::ostringstream ss;
         ss << "Cannot get out-of-bounds sample (" << index << "/" << getSampleCount() << ")";
         throw Exception(ss.str().c_str());
     }
-    return samples[index];
+    return samples_[index];
 }
 
 // get sample by frame and channel
-double AudioData::getSampleByFrame(unsigned int frame, unsigned int channel) const
+auto AudioData::getSampleByFrame(unsigned int frame, unsigned int channel) const -> double
 {
     if (frame >= getFrameCount()) {
         std::ostringstream ss;
         ss << "Cannot get out-of-bounds frame (" << frame << "/" << getFrameCount() << ")";
         throw Exception(ss.str().c_str());
     }
-    if (channel >= channels) {
+    if (channel >= channels_) {
         std::ostringstream ss;
-        ss << "Cannot get out-of-bounds channel (" << channel << "/" << channels << ")";
+        ss << "Cannot get out-of-bounds channel (" << channel << "/" << channels_ << ")";
         throw Exception(ss.str().c_str());
     }
-    return getSample(frame * channels + channel);
+    return getSample(frame * channels_ + channel);
 }
 
 // set sample by absolute index
@@ -124,7 +123,7 @@ void AudioData::setSample(unsigned int index, double value)
     if (!std::isfinite(value)) {
         throw Exception("Cannot set sample to NaN");
     }
-    samples[index] = value;
+    samples_[index] = value;
 }
 
 // set sample by frame and channel
@@ -135,58 +134,58 @@ void AudioData::setSampleByFrame(unsigned int frame, unsigned int channel, doubl
         ss << "Cannot set out-of-bounds frame (" << frame << "/" << getFrameCount() << ")";
         throw Exception(ss.str().c_str());
     }
-    if (channel >= channels) {
+    if (channel >= channels_) {
         std::ostringstream ss;
-        ss << "Cannot set out-of-bounds channel (" << channel << "/" << channels << ")";
+        ss << "Cannot set out-of-bounds channel (" << channel << "/" << channels_ << ")";
         throw Exception(ss.str().c_str());
     }
-    setSample(frame * channels + channel, value);
+    setSample(frame * channels_ + channel, value);
 }
 
 void AudioData::addToSampleCount(unsigned int inSamples)
 {
-    samples.resize(getSampleCount() + inSamples, 0.0);
+    samples_.resize(getSampleCount() + inSamples, 0.0);
 }
 
 void AudioData::addToFrameCount(unsigned int inFrames)
 {
-    if (channels < 1) {
+    if (channels_ < 1) {
         throw Exception("Channels must be > 0");
     }
-    addToSampleCount(inFrames * channels);
+    addToSampleCount(inFrames * channels_);
 }
 
-unsigned int AudioData::getSampleCount() const
+auto AudioData::getSampleCount() const -> unsigned int
 {
-    return samples.size();
+    return samples_.size();
 }
 
-unsigned int AudioData::getFrameCount() const
+auto AudioData::getFrameCount() const -> unsigned int
 {
-    if (channels < 1) {
+    if (channels_ < 1) {
         throw Exception("Channels must be > 0");
     }
-    return getSampleCount() / channels;
+    return getSampleCount() / channels_;
 }
 
 void AudioData::reduceToMono()
 {
-    if (channels < 2) {
+    if (channels_ < 2) {
         return;
     }
-    std::deque<double>::const_iterator readAt = samples.begin();
-    std::deque<double>::iterator writeAt = samples.begin();
-    while (readAt < samples.end()) {
+    auto readAt = samples_.begin();
+    auto writeAt = samples_.begin();
+    while (readAt < samples_.end()) {
         double sum = 0.0;
-        for (unsigned int c = 0; c < channels; c++) {
+        for (unsigned int c = 0; c < channels_; c++) {
             sum += *readAt;
             std::advance(readAt, 1);
         }
-        *writeAt = sum / channels;
+        *writeAt = sum / channels_;
         std::advance(writeAt, 1);
     }
-    samples.resize(getSampleCount() / channels);
-    channels = 1;
+    samples_.resize(getSampleCount() / channels_);
+    channels_ = 1;
 }
 
 // Strictly to be applied AFTER low pass filtering
@@ -195,28 +194,28 @@ void AudioData::downsample(unsigned int factor, bool shortcut)
     if (factor == 1) {
         return;
     }
-    if (channels > 1) {
+    if (channels_ > 1) {
         throw Exception("Apply to monophonic only");
     }
-    std::deque<double>::const_iterator readAt = samples.begin();
-    std::deque<double>::iterator writeAt = samples.begin();
+    auto readAt = samples_.begin();
+    auto writeAt = samples_.begin();
 
     // Prevent std::advance out of iterator range problems
-    size_t numSamplesRemaining = samples.size();
+    size_t numSamplesRemaining = samples_.size();
 
-    while (readAt < samples.end()) {
+    while (readAt < samples_.end()) {
         double mean = 0.0;
         if (shortcut) {
             mean = *readAt;
             if (numSamplesRemaining >= factor) {
                 std::advance(readAt, factor);
             } else {
-                readAt = samples.end();
+                readAt = samples_.end();
             }
             numSamplesRemaining -= factor;
         } else {
             for (unsigned int s = 0; s < factor; s++) {
-                if (readAt < samples.end()) {
+                if (readAt < samples_.end()) {
                     mean += *readAt;
                     std::advance(readAt, 1);
                     --numSamplesRemaining;
@@ -227,7 +226,7 @@ void AudioData::downsample(unsigned int factor, bool shortcut)
         *writeAt = mean;
         std::advance(writeAt, 1);
     }
-    samples.resize(ceil((double)getSampleCount() / (double)factor));
+    samples_.resize(ceil((double)getSampleCount() / (double)factor));
     setFrameRate(getFrameRate() / factor);
 }
 
@@ -238,13 +237,13 @@ void AudioData::discardFramesFromFront(unsigned int discardFrameCount)
         ss << "Cannot discard " << discardFrameCount << " frames of " << getFrameCount();
         throw Exception(ss.str().c_str());
     }
-    unsigned int discardSampleCount = discardFrameCount * channels;
-    std::deque<double>::iterator discardToHere = samples.begin();
+    unsigned int discardSampleCount = discardFrameCount * channels_;
+    auto discardToHere = samples_.begin();
     std::advance(discardToHere, discardSampleCount);
-    samples.erase(samples.begin(), discardToHere);
+    samples_.erase(samples_.begin(), discardToHere);
 }
 
-AudioData* AudioData::sliceSamplesFromBack(unsigned int sliceSampleCount)
+auto AudioData::sliceSamplesFromBack(unsigned int sliceSampleCount) -> AudioData*
 {
 
     if (sliceSampleCount > getSampleCount()) {
@@ -255,59 +254,59 @@ AudioData* AudioData::sliceSamplesFromBack(unsigned int sliceSampleCount)
 
     unsigned int samplesToLeaveIntact = getSampleCount() - sliceSampleCount;
 
-    AudioData* that = new AudioData();
-    that->channels = channels;
+    auto* that = new AudioData();
+    that->channels_ = channels_;
     that->setFrameRate(getFrameRate());
     that->addToSampleCount(sliceSampleCount);
 
-    std::deque<double>::const_iterator readAt = samples.begin();
+    auto readAt = samples_.begin();
     std::advance(readAt, samplesToLeaveIntact);
-    std::deque<double>::iterator writeAt = that->samples.begin();
-    while (readAt < samples.end()) {
+    auto writeAt = that->samples_.begin();
+    while (readAt < samples_.end()) {
         *writeAt = *readAt;
         std::advance(readAt, 1);
         std::advance(writeAt, 1);
     }
 
-    samples.resize(samplesToLeaveIntact);
+    samples_.resize(samplesToLeaveIntact);
 
     return that;
 }
 
 void AudioData::resetIterators()
 {
-    readIterator = samples.begin();
-    writeIterator = samples.begin();
+    readIterator_ = samples_.begin();
+    writeIterator_ = samples_.begin();
 }
 
-bool AudioData::readIteratorWithinUpperBound() const
+auto AudioData::readIteratorWithinUpperBound() const -> bool
 {
-    return (readIterator < samples.end());
+    return (readIterator_ < samples_.end());
 }
 
-bool AudioData::writeIteratorWithinUpperBound() const
+auto AudioData::writeIteratorWithinUpperBound() const -> bool
 {
-    return (writeIterator < samples.end());
+    return (writeIterator_ < samples_.end());
 }
 
 void AudioData::advanceReadIterator(unsigned int by)
 {
-    std::advance(readIterator, by);
+    std::advance(readIterator_, by);
 }
 
 void AudioData::advanceWriteIterator(unsigned int by)
 {
-    std::advance(writeIterator, by);
+    std::advance(writeIterator_, by);
 }
 
-double AudioData::getSampleAtReadIterator() const
+auto AudioData::getSampleAtReadIterator() const -> double
 {
-    return *readIterator;
+    return *readIterator_;
 }
 
 void AudioData::setSampleAtWriteIterator(double value)
 {
-    *writeIterator = value;
+    *writeIterator_ = value;
 }
 
 }

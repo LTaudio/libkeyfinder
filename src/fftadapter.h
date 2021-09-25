@@ -33,12 +33,12 @@ class FftAdapter {
 public:
     FftAdapter(unsigned int frameSize);
     ~FftAdapter();
-    unsigned int getFrameSize() const;
-    void setInput(unsigned int sample, double real);
+    [[nodiscard]] auto getFrameSize() const -> unsigned int;
+    void setInput(unsigned int i, double real);
     void execute();
-    double getOutputReal(unsigned int bin) const;
-    double getOutputImaginary(unsigned int bin) const;
-    double getOutputMagnitude(unsigned int bin) const;
+    [[nodiscard]] auto getOutputReal(unsigned int i) const -> double;
+    [[nodiscard]] auto getOutputImaginary(unsigned int i) const -> double;
+    [[nodiscard]] auto getOutputMagnitude(unsigned int i) const -> double;
 
 protected:
     unsigned int frameSize;
@@ -49,10 +49,10 @@ class InverseFftAdapter {
 public:
     InverseFftAdapter(unsigned int frameSize);
     ~InverseFftAdapter();
-    unsigned int getFrameSize() const;
-    void setInput(unsigned int sample, double real, double imaginary);
+    [[nodiscard]] auto getFrameSize() const -> unsigned int;
+    void setInput(unsigned int i, double real, double imaginary);
     void execute();
-    double getOutput(unsigned int bin) const;
+    [[nodiscard]] auto getOutput(unsigned int i) const -> double;
 
 protected:
     unsigned int frameSize;
