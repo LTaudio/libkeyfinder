@@ -27,19 +27,20 @@
 
 namespace KeyFinder {
 
-  class LowPassFilterFactory {
-  public:
+class LowPassFilterFactory {
+public:
     LowPassFilterFactory();
     ~LowPassFilterFactory();
     const LowPassFilter* getLowPassFilter(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize);
-  private:
+
+private:
     class LowPassFilterWrapper;
     std::vector<LowPassFilterWrapper*> lowPassFilters;
     std::mutex lowPassFilterFactoryMutex;
-  };
+};
 
-  class LowPassFilterFactory::LowPassFilterWrapper {
-  public:
+class LowPassFilterFactory::LowPassFilterWrapper {
+public:
     LowPassFilterWrapper(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize, const LowPassFilter* const filter);
     ~LowPassFilterWrapper();
     const LowPassFilter* getLowPassFilter() const;
@@ -47,13 +48,14 @@ namespace KeyFinder {
     unsigned int getFrameRate() const;
     double getCornerFrequency() const;
     unsigned int getFftFrameSize() const;
-  private:
+
+private:
     unsigned int order;
     unsigned int frameRate;
     double cornerFrequency;
     unsigned int fftFrameSize;
     const LowPassFilter* lowPassFilter;
-  };
+};
 
 }
 

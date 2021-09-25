@@ -22,20 +22,21 @@
 #ifndef TONEPROFILES_H
 #define TONEPROFILES_H
 
-#include "constants.h"
 #include "binode.h"
+#include "constants.h"
 
 namespace KeyFinder {
 
-  class ToneProfile {
-  public:
+class ToneProfile {
+public:
     ToneProfile(const std::vector<double>& customProfile);
     ~ToneProfile();
     double cosineSimilarity(const std::vector<double>& chromaVector, int offset) const;
-  private:
+
+private:
     void free();
     std::vector<Binode<double>*> tonics;
-  };
+};
 
 }
 

@@ -22,24 +22,25 @@
 #ifndef SPECTRUMANALYSER_H
 #define SPECTRUMANALYSER_H
 
-#include "chromagram.h"
 #include "audiodata.h"
-#include "fftadapter.h"
+#include "chromagram.h"
 #include "chromatransformfactory.h"
 #include "constants.h"
+#include "fftadapter.h"
 #include "temporalwindowfactory.h"
 #include "windowfunctions.h"
 
 namespace KeyFinder {
 
-  class SpectrumAnalyser {
-  public:
+class SpectrumAnalyser {
+public:
     SpectrumAnalyser(unsigned int frameRate, ChromaTransformFactory* ctFactory, TemporalWindowFactory* twFactory);
     Chromagram* chromagramOfWholeFrames(AudioData& audio, FftAdapter* const fft) const;
-  protected:
+
+protected:
     const ChromaTransform* chromaTransform;
     const std::vector<double>* tw;
-  };
+};
 
 }
 

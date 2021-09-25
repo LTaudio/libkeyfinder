@@ -26,11 +26,11 @@
 
 namespace KeyFinder {
 
-  class FftAdapterPrivate;
-  class InverseFftAdapterPrivate;
+class FftAdapterPrivate;
+class InverseFftAdapterPrivate;
 
-  class FftAdapter {
-  public:
+class FftAdapter {
+public:
     FftAdapter(unsigned int frameSize);
     ~FftAdapter();
     unsigned int getFrameSize() const;
@@ -39,23 +39,25 @@ namespace KeyFinder {
     double getOutputReal(unsigned int bin) const;
     double getOutputImaginary(unsigned int bin) const;
     double getOutputMagnitude(unsigned int bin) const;
-  protected:
+
+protected:
     unsigned int frameSize;
     FftAdapterPrivate* priv;
-  };
+};
 
-  class InverseFftAdapter {
-  public:
+class InverseFftAdapter {
+public:
     InverseFftAdapter(unsigned int frameSize);
     ~InverseFftAdapter();
     unsigned int getFrameSize() const;
     void setInput(unsigned int sample, double real, double imaginary);
     void execute();
     double getOutput(unsigned int bin) const;
-  protected:
+
+protected:
     unsigned int frameSize;
     InverseFftAdapterPrivate* priv;
-  };
+};
 
 }
 

@@ -21,37 +21,43 @@
 
 #include "_testhelpers.h"
 
-TEST (ChromaTransformTest, InsistsOnPositiveFrameRate) {
-  KeyFinder::ChromaTransform* ct = NULL;
-  ASSERT_THROW(ct = new KeyFinder::ChromaTransform(0), KeyFinder::Exception);
-  ASSERT_EQ(NULL, ct);
-  ASSERT_NO_THROW(ct = new KeyFinder::ChromaTransform(4410));
-  ASSERT_NO_THROW(delete ct);
+TEST(ChromaTransformTest, InsistsOnPositiveFrameRate)
+{
+    KeyFinder::ChromaTransform* ct = NULL;
+    ASSERT_THROW(ct = new KeyFinder::ChromaTransform(0), KeyFinder::Exception);
+    ASSERT_EQ(NULL, ct);
+    ASSERT_NO_THROW(ct = new KeyFinder::ChromaTransform(4410));
+    ASSERT_NO_THROW(delete ct);
 }
 
-TEST (ChromaTransformTest, InsistsOnNyquistHigherThanAnalysisFreqs) {
-  float high = KeyFinder::getLastFrequency();
-  KeyFinder::ChromaTransform* ct = NULL;
-  ASSERT_THROW(ct = new KeyFinder::ChromaTransform(high * 2 - 1), KeyFinder::Exception);
-  ASSERT_EQ(NULL, ct);
-  ASSERT_NO_THROW(ct = new KeyFinder::ChromaTransform(high * 2 + 1));
-  delete ct;
+TEST(ChromaTransformTest, InsistsOnNyquistHigherThanAnalysisFreqs)
+{
+    float high = KeyFinder::getLastFrequency();
+    KeyFinder::ChromaTransform* ct = NULL;
+    ASSERT_THROW(ct = new KeyFinder::ChromaTransform(high * 2 - 1), KeyFinder::Exception);
+    ASSERT_EQ(NULL, ct);
+    ASSERT_NO_THROW(ct = new KeyFinder::ChromaTransform(high * 2 + 1));
+    delete ct;
 }
 
-TEST (ChromaTransformTest, InsistsOnSufficientBassResolution) {
-  KeyFinder::ChromaTransform* ct = NULL;
-  ASSERT_THROW(ct = new KeyFinder::ChromaTransform(31861), KeyFinder::Exception);
-  ASSERT_EQ(NULL, ct);
-  ASSERT_NO_THROW(ct = new KeyFinder::ChromaTransform(31860));
-  delete ct;
+TEST(ChromaTransformTest, InsistsOnSufficientBassResolution)
+{
+    KeyFinder::ChromaTransform* ct = NULL;
+    ASSERT_THROW(ct = new KeyFinder::ChromaTransform(31861), KeyFinder::Exception);
+    ASSERT_EQ(NULL, ct);
+    ASSERT_NO_THROW(ct = new KeyFinder::ChromaTransform(31860));
+    delete ct;
 }
 
 // Inheritance so we can get the (private) kernel out.
 class MyChromaTransform : public KeyFinder::ChromaTransform {
 public:
-  MyChromaTransform(unsigned int f) : KeyFinder::ChromaTransform(f) { }
-  std::vector<unsigned int> getChromaBandFftBinOffsets() { return chromaBandFftBinOffsets; }
-  std::vector< std::vector<double> > getDirectSpectralKernel() { return directSpectralKernel; }
+    MyChromaTransform(unsigned int f)
+        : KeyFinder::ChromaTransform(f)
+    {
+    }
+    std::vector<unsigned int> getChromaBandFftBinOffsets() { return chromaBandFftBinOffsets; }
+    std::vector<std::vector<double>> getDirectSpectralKernel() { return directSpectralKernel; }
 };
 
 /*TEST (ChromaTransformTest, TestSpectralKernel) {

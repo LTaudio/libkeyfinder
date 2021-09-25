@@ -22,42 +22,42 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include "exception.h"
 #include <cmath>
-#include <vector>
 #include <deque>
 #include <mutex>
-#include "exception.h"
+#include <vector>
 
-#undef  PI
+#undef PI
 #define PI 3.1415926535897932384626433832795
 
-#undef  SEMITONES
+#undef SEMITONES
 #define SEMITONES 12 // per octave, obviously
 
-#undef  OCTAVES
+#undef OCTAVES
 #define OCTAVES 6
 
-#undef  BANDS
+#undef BANDS
 #define BANDS (SEMITONES * OCTAVES)
 
-#undef  KEYS
+#undef KEYS
 #define KEYS (SEMITONES * 2)
 
-#undef  TONEPROFILESIZE
+#undef TONEPROFILESIZE
 #define TONEPROFILESIZE (BANDS * 2)
 
-#undef  FFTFRAMESIZE
+#undef FFTFRAMESIZE
 #define FFTFRAMESIZE 16384
 
-#undef  HOPSIZE
+#undef HOPSIZE
 #define HOPSIZE (FFTFRAMESIZE / 4)
 
-#undef  DIRECTSKSTRETCH
+#undef DIRECTSKSTRETCH
 #define DIRECTSKSTRETCH 0.8
 
 namespace KeyFinder {
 
-  enum key_t {
+enum key_t {
     A_MAJOR = 0,
     A_MINOR,
     B_FLAT_MAJOR,
@@ -83,23 +83,23 @@ namespace KeyFinder {
     A_FLAT_MAJOR,
     A_FLAT_MINOR,
     SILENCE = 24
-  };
+};
 
-  enum temporal_window_t {
+enum temporal_window_t {
     WINDOW_BLACKMAN,
     WINDOW_HAMMING
-  };
+};
 
-  enum scale_t {
+enum scale_t {
     SCALE_MAJOR,
     SCALE_MINOR
-  };
+};
 
-  double getFrequencyOfBand(unsigned int band);
-  double getLastFrequency();
+double getFrequencyOfBand(unsigned int band);
+double getLastFrequency();
 
-  const std::vector<double>& toneProfileMajor();
-  const std::vector<double>& toneProfileMinor();
+const std::vector<double>& toneProfileMajor();
+const std::vector<double>& toneProfileMinor();
 }
 
 #endif

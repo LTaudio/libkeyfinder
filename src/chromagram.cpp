@@ -23,55 +23,63 @@
 
 namespace KeyFinder {
 
-  Chromagram::Chromagram(unsigned int hops) : chromaData(hops, std::vector<double>(BANDS, 0.0)) { }
+Chromagram::Chromagram(unsigned int hops)
+    : chromaData(hops, std::vector<double>(BANDS, 0.0))
+{
+}
 
-  double Chromagram::getMagnitude(unsigned int hop, unsigned int band) const {
+double Chromagram::getMagnitude(unsigned int hop, unsigned int band) const
+{
     if (hop >= getHops()) {
-      std::ostringstream ss;
-      ss << "Cannot get magnitude of out-of-bounds hop (" << hop << "/" << getHops() << ")";
-      throw Exception(ss.str().c_str());
+        std::ostringstream ss;
+        ss << "Cannot get magnitude of out-of-bounds hop (" << hop << "/" << getHops() << ")";
+        throw Exception(ss.str().c_str());
     }
     if (band >= BANDS) {
-      std::ostringstream ss;
-      ss << "Cannot get magnitude of out-of-bounds band (" << band << "/" << BANDS << ")";
-      throw Exception(ss.str().c_str());
+        std::ostringstream ss;
+        ss << "Cannot get magnitude of out-of-bounds band (" << band << "/" << BANDS << ")";
+        throw Exception(ss.str().c_str());
     }
     return chromaData[hop][band];
-  }
+}
 
-  void Chromagram::setMagnitude(unsigned int hop, unsigned int band, double value) {
+void Chromagram::setMagnitude(unsigned int hop, unsigned int band, double value)
+{
     if (hop >= getHops()) {
-      std::ostringstream ss;
-      ss << "Cannot set magnitude of out-of-bounds hop (" << hop << "/" << getHops() << ")";
-      throw Exception(ss.str().c_str());
+        std::ostringstream ss;
+        ss << "Cannot set magnitude of out-of-bounds hop (" << hop << "/" << getHops() << ")";
+        throw Exception(ss.str().c_str());
     }
     if (band >= BANDS) {
-      std::ostringstream ss;
-      ss << "Cannot set magnitude of out-of-bounds band (" << band << "/" << BANDS << ")";
-      throw Exception(ss.str().c_str());
+        std::ostringstream ss;
+        ss << "Cannot set magnitude of out-of-bounds band (" << band << "/" << BANDS << ")";
+        throw Exception(ss.str().c_str());
     }
     if (!std::isfinite(value)) {
-      throw Exception("Cannot set magnitude to NaN");
+        throw Exception("Cannot set magnitude to NaN");
     }
     chromaData[hop][band] = value;
-  }
+}
 
-  std::vector<double> Chromagram::collapseToOneHop() const {
+std::vector<double> Chromagram::collapseToOneHop() const
+{
     std::vector<double> oneHop = std::vector<double>(BANDS, 0.0);
     for (unsigned int h = 0; h < getHops(); h++) {
-      for (unsigned int b = 0; b < BANDS; b++) {
-        oneHop[b] += getMagnitude(h, b) / getHops();
-      }
+        for (unsigned int b = 0; b < BANDS; b++) {
+            oneHop[b] += getMagnitude(h, b) / getHops();
+        }
     }
     return oneHop;
-  }
+}
 
-  void Chromagram::append(const Chromagram& that) {
+void Chromagram::append(const Chromagram& that)
+{
     chromaData.insert(chromaData.end(), that.chromaData.begin(), that.chromaData.end());
-  }
+}
 
-  unsigned int Chromagram::getHops() const {
+unsigned int Chromagram::getHops() const
+{
     return chromaData.size();
-  }
+}
 
 }

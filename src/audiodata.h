@@ -26,8 +26,8 @@
 
 namespace KeyFinder {
 
-  class AudioData {
-  public:
+class AudioData {
+public:
     AudioData();
 
     unsigned int getChannels() const;
@@ -59,13 +59,13 @@ namespace KeyFinder {
     void downsample(unsigned int factor, bool shortcut = true);
     AudioData* sliceSamplesFromBack(unsigned int sliceSampleCount);
 
-  private:
+private:
     std::deque<double> samples;
     unsigned int channels;
     unsigned int frameRate;
     std::deque<double>::const_iterator readIterator;
     std::deque<double>::iterator writeIterator;
-  };
+};
 
 }
 

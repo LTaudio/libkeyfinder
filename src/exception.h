@@ -22,15 +22,18 @@
 #ifndef EXCEPTION_H
 #define EXCEPTION_H
 
-#include <stdexcept>
 #include <sstream>
+#include <stdexcept>
 
 namespace KeyFinder {
 
-  class Exception : public std::runtime_error {
-  public:
-    Exception(const char* msg) : std::runtime_error(msg) { }
-  };
+class Exception : public std::runtime_error {
+public:
+    Exception(const char* msg)
+        : std::runtime_error(msg)
+    {
+    }
+};
 
 }
 

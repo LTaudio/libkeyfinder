@@ -23,47 +23,50 @@
 
 namespace KeyFinder {
 
-  KeyClassifier::KeyClassifier(const std::vector<double>& majorProfile, const std::vector<double>& minorProfile) {
+KeyClassifier::KeyClassifier(const std::vector<double>& majorProfile, const std::vector<double>& minorProfile)
+{
 
     if (majorProfile.size() != BANDS) {
-      throw Exception("Tone profile must have 72 elements");
+        throw Exception("Tone profile must have 72 elements");
     }
 
     if (minorProfile.size() != BANDS) {
-      throw Exception("Tone profile must have 72 elements");
+        throw Exception("Tone profile must have 72 elements");
     }
 
-    major   = new ToneProfile(majorProfile);
-    minor   = new ToneProfile(minorProfile);
+    major = new ToneProfile(majorProfile);
+    minor = new ToneProfile(minorProfile);
     silence = new ToneProfile(std::vector<double>(BANDS, 0.0));
-  }
+}
 
-  KeyClassifier::~KeyClassifier() {
+KeyClassifier::~KeyClassifier()
+{
     delete major;
     delete minor;
     delete silence;
-  }
+}
 
-  key_t KeyClassifier::classify(const std::vector<double>& chromaVector) {
+key_t KeyClassifier::classify(const std::vector<double>& chromaVector)
+{
     std::vector<double> scores(24);
     double bestScore = 0.0;
     for (unsigned int i = 0; i < SEMITONES; i++) {
-      double score;
-      score = major->cosineSimilarity(chromaVector, i); // major
-      scores[i*2] = score;
-      score = minor->cosineSimilarity(chromaVector, i); // minor
-      scores[(i*2)+1] = score;
+        double score;
+        score = major->cosineSimilarity(chromaVector, i); // major
+        scores[i * 2] = score;
+        score = minor->cosineSimilarity(chromaVector, i); // minor
+        scores[(i * 2) + 1] = score;
     }
     bestScore = silence->cosineSimilarity(chromaVector, 0);
     // find best match, defaulting to silence
     key_t bestMatch = SILENCE;
     for (unsigned int i = 0; i < 24; i++) {
-      if (scores[i] > bestScore) {
-        bestScore = scores[i];
-        bestMatch = (key_t)i;
-      }
+        if (scores[i] > bestScore) {
+            bestScore = scores[i];
+            bestMatch = (key_t)i;
+        }
     }
     return bestMatch;
-  }
+}
 
 }

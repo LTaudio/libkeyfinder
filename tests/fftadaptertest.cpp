@@ -21,54 +21,55 @@
 
 #include "_testhelpers.h"
 
-TEST (FftAdapterTest, ForwardAndBackward) {
+TEST(FftAdapterTest, ForwardAndBackward)
+{
 
-  unsigned int frameSize = 4096;
-  std::vector<double> original(frameSize);
-  KeyFinder::FftAdapter forwards(frameSize);
+    unsigned int frameSize = 4096;
+    std::vector<double> original(frameSize);
+    KeyFinder::FftAdapter forwards(frameSize);
 
-  for (unsigned int i = 0; i < frameSize; i++) {
-    float sample = 0.0;
-    sample += sine_wave(i,  2, frameSize, 10000);
-    sample += sine_wave(i,  4, frameSize,  8000);
-    sample += sine_wave(i,  5, frameSize,  6000);
-    sample += sine_wave(i,  7, frameSize,  4000);
-    sample += sine_wave(i, 13, frameSize,  2000);
-    sample += sine_wave(i, 20, frameSize,   500);
-    forwards.setInput(i, sample);
-    original[i] = sample;
-  }
-
-  forwards.execute();
-
-  for (unsigned int i = 0; i < frameSize; i++) {
-    float out = forwards.getOutputMagnitude(i);
-    if (i == 2) {
-      ASSERT_FLOAT_EQ(10000 / 2 * frameSize, out);
-    } else if (i == 4) {
-      ASSERT_FLOAT_EQ(8000 / 2 * frameSize, out);
-    } else if (i == 5) {
-      ASSERT_FLOAT_EQ(6000 / 2 * frameSize, out);
-    } else if (i == 7) {
-      ASSERT_FLOAT_EQ(4000 / 2 * frameSize, out);
-    } else if (i == 13) {
-      ASSERT_FLOAT_EQ(2000 / 2 * frameSize, out);
-    } else if (i == 20) {
-      ASSERT_NEAR(500 / 2 * frameSize, out, 0.1);
-    } else {
-      ASSERT_GT(5, out);
+    for (unsigned int i = 0; i < frameSize; i++) {
+        float sample = 0.0;
+        sample += sine_wave(i, 2, frameSize, 10000);
+        sample += sine_wave(i, 4, frameSize, 8000);
+        sample += sine_wave(i, 5, frameSize, 6000);
+        sample += sine_wave(i, 7, frameSize, 4000);
+        sample += sine_wave(i, 13, frameSize, 2000);
+        sample += sine_wave(i, 20, frameSize, 500);
+        forwards.setInput(i, sample);
+        original[i] = sample;
     }
-  }
 
-  KeyFinder::InverseFftAdapter backwards(frameSize);
+    forwards.execute();
 
-  for (unsigned int i = 0; i < frameSize; i++) {
-    backwards.setInput(i, forwards.getOutputReal(i), forwards.getOutputImaginary(i));
-  }
+    for (unsigned int i = 0; i < frameSize; i++) {
+        float out = forwards.getOutputMagnitude(i);
+        if (i == 2) {
+            ASSERT_FLOAT_EQ(10000 / 2 * frameSize, out);
+        } else if (i == 4) {
+            ASSERT_FLOAT_EQ(8000 / 2 * frameSize, out);
+        } else if (i == 5) {
+            ASSERT_FLOAT_EQ(6000 / 2 * frameSize, out);
+        } else if (i == 7) {
+            ASSERT_FLOAT_EQ(4000 / 2 * frameSize, out);
+        } else if (i == 13) {
+            ASSERT_FLOAT_EQ(2000 / 2 * frameSize, out);
+        } else if (i == 20) {
+            ASSERT_NEAR(500 / 2 * frameSize, out, 0.1);
+        } else {
+            ASSERT_GT(5, out);
+        }
+    }
 
-  backwards.execute();
+    KeyFinder::InverseFftAdapter backwards(frameSize);
 
-  for (unsigned int i = 0; i < frameSize; i++) {
-    ASSERT_NEAR(original[i], backwards.getOutput(i), 0.001);
-  }
+    for (unsigned int i = 0; i < frameSize; i++) {
+        backwards.setInput(i, forwards.getOutputReal(i), forwards.getOutputImaginary(i));
+    }
+
+    backwards.execute();
+
+    for (unsigned int i = 0; i < frameSize; i++) {
+        ASSERT_NEAR(original[i], backwards.getOutput(i), 0.001);
+    }
 }

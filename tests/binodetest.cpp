@@ -21,24 +21,26 @@
 
 #include "_testhelpers.h"
 
-TEST_CASE ("BinodeTest/ConstructorDefaultsWork") {
-  KeyFinder::Binode<float> bf;
-  ASSERT_FLOAT_EQ(0.0, bf.data);
-  ASSERT_EQ(NULL, bf.l);
-  ASSERT_EQ(NULL, bf.r);
+TEST_CASE("BinodeTest/ConstructorDefaultsWork")
+{
+    KeyFinder::Binode<float> bf;
+    ASSERT_FLOAT_EQ(0.0, bf.data);
+    ASSERT_EQ(NULL, bf.l);
+    ASSERT_EQ(NULL, bf.r);
 
-  KeyFinder::Binode<int> bi;
-  ASSERT_EQ(0, bi.data);
-  ASSERT_EQ(NULL, bi.l);
-  ASSERT_EQ(NULL, bi.r);
+    KeyFinder::Binode<int> bi;
+    ASSERT_EQ(0, bi.data);
+    ASSERT_EQ(NULL, bi.l);
+    ASSERT_EQ(NULL, bi.r);
 }
 
-TEST_CASE ("BinodeTest/ConstructorArgumentsWork") {
-  KeyFinder::Binode<float> bf(365.25);
-  ASSERT_FLOAT_EQ(365.25, bf.data);
-  ASSERT_EQ(NULL, bf.l);
-  ASSERT_EQ(NULL, bf.r);
+TEST_CASE("BinodeTest/ConstructorArgumentsWork")
+{
+    KeyFinder::Binode<float> bf(365.25);
+    ASSERT_FLOAT_EQ(365.25, bf.data);
+    ASSERT_EQ(NULL, bf.l);
+    ASSERT_EQ(NULL, bf.r);
 
-  KeyFinder::Binode<int> bi(14);
-  ASSERT_EQ(14, bi.data);
+    KeyFinder::Binode<int> bi(14);
+    ASSERT_EQ(14, bi.data);
 }

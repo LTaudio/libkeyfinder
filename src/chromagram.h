@@ -26,17 +26,18 @@
 
 namespace KeyFinder {
 
-  class Chromagram {
-  public:
+class Chromagram {
+public:
     Chromagram(unsigned int hops = 0);
     void append(const Chromagram& that);
     void setMagnitude(unsigned int hop, unsigned int band, double value);
     double getMagnitude(unsigned int hop, unsigned int band) const;
     unsigned int getHops() const;
     std::vector<double> collapseToOneHop() const;
-  private:
-    std::vector< std::vector<double> > chromaData;
-  };
+
+private:
+    std::vector<std::vector<double>> chromaData;
+};
 
 }
 

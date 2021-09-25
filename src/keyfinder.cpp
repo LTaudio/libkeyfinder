@@ -23,53 +23,57 @@
 
 namespace KeyFinder {
 
-  key_t KeyFinder::keyOfAudio(const AudioData& originalAudio) {
+key_t KeyFinder::keyOfAudio(const AudioData& originalAudio)
+{
 
     Workspace workspace;
     progressiveChromagram(originalAudio, workspace);
     finalChromagram(workspace);
 
     return keyOfChromaVector(workspace.chromagram->collapseToOneHop());
-  }
+}
 
-  void KeyFinder::progressiveChromagram(AudioData audio, Workspace& workspace) {
+void KeyFinder::progressiveChromagram(AudioData audio, Workspace& workspace)
+{
     preprocess(audio, workspace);
     workspace.preprocessedBuffer.append(audio);
     chromagramOfBufferedAudio(workspace);
-  }
+}
 
-  void KeyFinder::finalChromagram(Workspace& workspace) {
+void KeyFinder::finalChromagram(Workspace& workspace)
+{
     // flush remainder buffer
     if (workspace.remainderBuffer.getSampleCount() > 0) {
-      AudioData flush;
-      preprocess(flush, workspace, true);
+        AudioData flush;
+        preprocess(flush, workspace, true);
     }
     // zero padding
     unsigned int paddedHopCount = ceil(workspace.preprocessedBuffer.getSampleCount() / (double)HOPSIZE);
     unsigned int finalSampleLength = FFTFRAMESIZE + ((paddedHopCount - 1) * HOPSIZE);
     workspace.preprocessedBuffer.addToSampleCount(finalSampleLength - workspace.preprocessedBuffer.getSampleCount());
     chromagramOfBufferedAudio(workspace);
-  }
+}
 
-  void KeyFinder::preprocess(AudioData& workingAudio, Workspace& workspace, bool flushRemainderBuffer) {
+void KeyFinder::preprocess(AudioData& workingAudio, Workspace& workspace, bool flushRemainderBuffer)
+{
 
     workingAudio.reduceToMono();
 
     if (workspace.remainderBuffer.getChannels() > 0) {
-      workingAudio.prepend(workspace.remainderBuffer);
-      workspace.remainderBuffer.discardFramesFromFront(workspace.remainderBuffer.getFrameCount());
+        workingAudio.prepend(workspace.remainderBuffer);
+        workspace.remainderBuffer.discardFramesFromFront(workspace.remainderBuffer.getFrameCount());
     }
 
     // TODO: there is presumably some good maths to determine filter frequencies. For now, this approximates original experiment values.
     double lpfCutoff = getLastFrequency() * 1.012;
     double dsCutoff = getLastFrequency() * 1.10;
-    unsigned int downsampleFactor = (int) floor(workingAudio.getFrameRate() / 2 / dsCutoff);
+    unsigned int downsampleFactor = (int)floor(workingAudio.getFrameRate() / 2 / dsCutoff);
 
     unsigned int bufferExcess = workingAudio.getSampleCount() % downsampleFactor;
     if (!flushRemainderBuffer && bufferExcess != 0) {
-      AudioData* remainder = workingAudio.sliceSamplesFromBack(bufferExcess);
-      workspace.remainderBuffer.append(*remainder);
-      delete remainder;
+        AudioData* remainder = workingAudio.sliceSamplesFromBack(bufferExcess);
+        workspace.remainderBuffer.append(*remainder);
+        delete remainder;
     }
 
     const LowPassFilter* lpf = lpfFactory.getLowPassFilter(160, workingAudio.getFrameRate(), lpfCutoff, 2048);
@@ -77,36 +81,40 @@ namespace KeyFinder {
     // note we don't delete the LPF; it's stored in the factory for reuse
 
     workingAudio.downsample(downsampleFactor);
-  }
+}
 
-  void KeyFinder::chromagramOfBufferedAudio(Workspace& workspace) {
+void KeyFinder::chromagramOfBufferedAudio(Workspace& workspace)
+{
     if (workspace.fftAdapter == NULL) {
-      workspace.fftAdapter = new FftAdapter(FFTFRAMESIZE);
+        workspace.fftAdapter = new FftAdapter(FFTFRAMESIZE);
     }
     SpectrumAnalyser sa(workspace.preprocessedBuffer.getFrameRate(), &ctFactory, &twFactory);
     Chromagram* c = sa.chromagramOfWholeFrames(workspace.preprocessedBuffer, workspace.fftAdapter);
     workspace.preprocessedBuffer.discardFramesFromFront(HOPSIZE * c->getHops());
     if (workspace.chromagram == NULL) {
-      workspace.chromagram = c;
+        workspace.chromagram = c;
     } else {
-      workspace.chromagram->append(*c);
-      delete c;
+        workspace.chromagram->append(*c);
+        delete c;
     }
-  }
+}
 
-  key_t KeyFinder::keyOfChromaVector(const std::vector<double>& chromaVector) const {
+key_t KeyFinder::keyOfChromaVector(const std::vector<double>& chromaVector) const
+{
     KeyClassifier classifier(toneProfileMajor(), toneProfileMinor());
     return classifier.classify(chromaVector);
-  }
+}
 
-  key_t KeyFinder::keyOfChromaVector(const std::vector<double> &chromaVector, const std::vector<double> &overrideMajorProfile, const std::vector<double> &overrideMinorProfile) const {
+key_t KeyFinder::keyOfChromaVector(const std::vector<double>& chromaVector, const std::vector<double>& overrideMajorProfile, const std::vector<double>& overrideMinorProfile) const
+{
     KeyClassifier classifier(overrideMajorProfile, overrideMinorProfile);
     return classifier.classify(chromaVector);
-  }
+}
 
-  key_t KeyFinder::keyOfChromagram(const Workspace& workspace) const {
+key_t KeyFinder::keyOfChromagram(const Workspace& workspace) const
+{
     KeyClassifier classifier(toneProfileMajor(), toneProfileMinor());
     return classifier.classify(workspace.chromagram->collapseToOneHop());
-  }
+}
 
 }

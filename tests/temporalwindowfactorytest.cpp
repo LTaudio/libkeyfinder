@@ -21,33 +21,36 @@
 
 #include "_testhelpers.h"
 
-TEST (TemporalWindowFactoryTest, FrameSize) {
-  KeyFinder::TemporalWindowFactory twf;
+TEST(TemporalWindowFactoryTest, FrameSize)
+{
+    KeyFinder::TemporalWindowFactory twf;
 
-  const std::vector<double>* tw1 = twf.getTemporalWindow(10);
-  ASSERT_EQ(10, tw1->size());
+    const std::vector<double>* tw1 = twf.getTemporalWindow(10);
+    ASSERT_EQ(10, tw1->size());
 }
 
-TEST (TemporalWindowFactoryTest, Function) {
-  KeyFinder::TemporalWindowFactory twf;
+TEST(TemporalWindowFactoryTest, Function)
+{
+    KeyFinder::TemporalWindowFactory twf;
 
-  const std::vector<double>* tw1 = twf.getTemporalWindow(1000);
+    const std::vector<double>* tw1 = twf.getTemporalWindow(1000);
 
-  KeyFinder::WindowFunction win;
-  for (unsigned int i = 0; i < 1000; i++) {
-    float a = win.window(KeyFinder::WINDOW_BLACKMAN, i, 1000);
-    float b = tw1->at(i);
-    ASSERT_FLOAT_EQ(a, b);
-  }
+    KeyFinder::WindowFunction win;
+    for (unsigned int i = 0; i < 1000; i++) {
+        float a = win.window(KeyFinder::WINDOW_BLACKMAN, i, 1000);
+        float b = tw1->at(i);
+        ASSERT_FLOAT_EQ(a, b);
+    }
 }
 
-TEST (TemporalWindowFactoryTest, RepeatedWindowRequests) {
-  KeyFinder::TemporalWindowFactory twf;
+TEST(TemporalWindowFactoryTest, RepeatedWindowRequests)
+{
+    KeyFinder::TemporalWindowFactory twf;
 
-  const std::vector<double>* tw1 = twf.getTemporalWindow(10);
-  const std::vector<double>* tw2 = twf.getTemporalWindow(10);
-  const std::vector<double>* tw3 = twf.getTemporalWindow(12);
+    const std::vector<double>* tw1 = twf.getTemporalWindow(10);
+    const std::vector<double>* tw2 = twf.getTemporalWindow(10);
+    const std::vector<double>* tw3 = twf.getTemporalWindow(12);
 
-  ASSERT_EQ(tw1, tw2);
-  ASSERT_NE(tw2, tw3);
+    ASSERT_EQ(tw1, tw2);
+    ASSERT_NE(tw2, tw3);
 }

@@ -23,7 +23,7 @@
 
 namespace KeyFinder {
 
-  static double FREQUENCIES[] = {
+static double FREQUENCIES[] = {
     32.7031956625748,
     34.647828872109,
     36.708095989676,
@@ -96,22 +96,24 @@ namespace KeyFinder {
     1760,
     1864.65504607236,
     1975.5332050245
-  };
+};
 
-  double getFrequencyOfBand(unsigned int band) {
+double getFrequencyOfBand(unsigned int band)
+{
     if (band >= BANDS) {
-      std::ostringstream ss;
-      ss << "Cannot get frequency of out-of-bounds band index (" << band << "/" << BANDS << ")";
-      throw Exception(ss.str().c_str());
+        std::ostringstream ss;
+        ss << "Cannot get frequency of out-of-bounds band index (" << band << "/" << BANDS << ")";
+        throw Exception(ss.str().c_str());
     }
     return FREQUENCIES[band];
-  }
+}
 
-  double getLastFrequency() {
+double getLastFrequency()
+{
     return FREQUENCIES[BANDS - 1];
-  }
+}
 
-  static double MAJOR_PROFILE[SEMITONES] = {
+static double MAJOR_PROFILE[SEMITONES] = {
     7.23900502618145225142,
     3.50351166725158691406,
     3.58445177536649417505,
@@ -124,9 +126,9 @@ namespace KeyFinder {
     4.55614256655143456953,
     4.07392666663523606019,
     4.45932757378886890365,
-  };
+};
 
-  static double MINOR_PROFILE[SEMITONES] = {
+static double MINOR_PROFILE[SEMITONES] = {
     7.00255045060284420089,
     3.14360279015996679775,
     4.35904319714962529275,
@@ -139,40 +141,42 @@ namespace KeyFinder {
     2.87241191079875557435,
     5.35467999794542670600,
     3.83242038595048351013,
-  };
+};
 
-  static double OCTAVE_WEIGHTS[OCTAVES] = {
+static double OCTAVE_WEIGHTS[OCTAVES] = {
     0.39997267549999998559,
     0.55634425248300645173,
     0.52496636345143543600,
     0.60847548384277727607,
     0.59898115679999996974,
     0.49072435317960994006,
-  };
+};
 
-  static std::vector<double> tpMajor;
-  static std::vector<double> tpMinor;
+static std::vector<double> tpMajor;
+static std::vector<double> tpMinor;
 
-  const std::vector<double>& toneProfileMajor() {
+const std::vector<double>& toneProfileMajor()
+{
     if (tpMajor.size() == 0) {
-      for (unsigned int o = 0; o < OCTAVES; o++) {
-        for (unsigned int s = 0; s < SEMITONES; s++) {
-          tpMajor.push_back(OCTAVE_WEIGHTS[o] * MAJOR_PROFILE[s]);
+        for (unsigned int o = 0; o < OCTAVES; o++) {
+            for (unsigned int s = 0; s < SEMITONES; s++) {
+                tpMajor.push_back(OCTAVE_WEIGHTS[o] * MAJOR_PROFILE[s]);
+            }
         }
-      }
     }
     return tpMajor;
-  }
+}
 
-  const std::vector<double>& toneProfileMinor() {
+const std::vector<double>& toneProfileMinor()
+{
     if (tpMinor.size() == 0) {
-      for (unsigned int o = 0; o < OCTAVES; o++) {
-        for (unsigned int s = 0; s < SEMITONES; s++) {
-          tpMinor.push_back(OCTAVE_WEIGHTS[o] * MINOR_PROFILE[s]);
+        for (unsigned int o = 0; o < OCTAVES; o++) {
+            for (unsigned int s = 0; s < SEMITONES; s++) {
+                tpMinor.push_back(OCTAVE_WEIGHTS[o] * MINOR_PROFILE[s]);
+            }
         }
-      }
     }
     return tpMinor;
-  }
+}
 
 }

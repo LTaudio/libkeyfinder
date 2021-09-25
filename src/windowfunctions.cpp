@@ -23,24 +23,26 @@
 
 namespace KeyFinder {
 
-  double WindowFunction::window(temporal_window_t windowType, int n, int N) const {
+double WindowFunction::window(temporal_window_t windowType, int n, int N) const
+{
     switch (windowType) {
-      case WINDOW_BLACKMAN:
-        return 0.42 - (0.5 * cos((2 * PI * n)/(N-1))) + (0.08 * cos((4 * PI * n)/(N-1)));
-      default:
+    case WINDOW_BLACKMAN:
+        return 0.42 - (0.5 * cos((2 * PI * n) / (N - 1))) + (0.08 * cos((4 * PI * n) / (N - 1)));
+    default:
         // This should be unreachable code, but just in case fall back to hamming window.
         // fall through
-      case WINDOW_HAMMING:
-        return 0.54 - (0.46 * cos((2 * PI * n)/(N-1)));
+    case WINDOW_HAMMING:
+        return 0.54 - (0.46 * cos((2 * PI * n) / (N - 1)));
     }
+}
 
-  }
-
-  double WindowFunction::gaussianWindow(int n, int N, double sigma) const {
+double WindowFunction::gaussianWindow(int n, int N, double sigma) const
+{
     return exp(-1 * (pow(n - (N / 2), 2) / (2 * sigma * sigma)));
-  }
+}
 
-  std::vector<double> WindowFunction::convolve(const std::vector<double>& input, const std::vector<double>& window) const {
+std::vector<double> WindowFunction::convolve(const std::vector<double>& input, const std::vector<double>& window) const
+{
 
     unsigned int inputSize = input.size();
     unsigned int padding = window.size() / 2;
@@ -48,17 +50,17 @@ namespace KeyFinder {
 
     // TODO: this implements zero padding for boundary effects, write something mean-based later.
     for (unsigned int sample = 0; sample < inputSize; sample++) {
-      double convolution = 0.0;
-      for (unsigned int k = 0; k < window.size(); k++) {
-        int frm = (signed)sample - (signed)padding + (signed)k;
-        if (frm >= 0 && frm < (signed)inputSize) {
-          // don't run off either end
-          convolution += input[frm] * window[k] / window.size();
+        double convolution = 0.0;
+        for (unsigned int k = 0; k < window.size(); k++) {
+            int frm = (signed)sample - (signed)padding + (signed)k;
+            if (frm >= 0 && frm < (signed)inputSize) {
+                // don't run off either end
+                convolution += input[frm] * window[k] / window.size();
+            }
         }
-      }
-      convolved[sample] = convolution;
+        convolved[sample] = convolution;
     }
     return convolved;
-  }
+}
 
 }

@@ -29,8 +29,8 @@
 
 namespace KeyFinder {
 
-  class Workspace {
-  public:
+class Workspace {
+public:
     Workspace();
     ~Workspace();
     AudioData remainderBuffer;
@@ -38,7 +38,7 @@ namespace KeyFinder {
     Chromagram* chromagram;
     FftAdapter* fftAdapter;
     std::vector<double>* lpfBuffer;
-  };
+};
 
 }
 

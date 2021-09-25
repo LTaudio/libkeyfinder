@@ -21,18 +21,19 @@
 
 #include "_testhelpers.h"
 
-TEST (WorkspaceTest, ConstructorDefaultsWork) {
-  KeyFinder::Workspace w;
+TEST(WorkspaceTest, ConstructorDefaultsWork)
+{
+    KeyFinder::Workspace w;
 
-  ASSERT_EQ(0, w.preprocessedBuffer.getChannels());
-  ASSERT_EQ(0, w.preprocessedBuffer.getFrameRate());
-  ASSERT_EQ(0, w.preprocessedBuffer.getSampleCount());
+    ASSERT_EQ(0, w.preprocessedBuffer.getChannels());
+    ASSERT_EQ(0, w.preprocessedBuffer.getFrameRate());
+    ASSERT_EQ(0, w.preprocessedBuffer.getSampleCount());
 
-  ASSERT_EQ(0, w.remainderBuffer.getChannels());
-  ASSERT_EQ(0, w.remainderBuffer.getFrameRate());
-  ASSERT_EQ(0, w.remainderBuffer.getSampleCount());
+    ASSERT_EQ(0, w.remainderBuffer.getChannels());
+    ASSERT_EQ(0, w.remainderBuffer.getFrameRate());
+    ASSERT_EQ(0, w.remainderBuffer.getSampleCount());
 
-  ASSERT_EQ(NULL, w.chromagram);
-  ASSERT_EQ(NULL, w.fftAdapter);
-  ASSERT_EQ(NULL, w.lpfBuffer);
+    ASSERT_EQ(NULL, w.chromagram);
+    ASSERT_EQ(NULL, w.fftAdapter);
+    ASSERT_EQ(NULL, w.lpfBuffer);
 }

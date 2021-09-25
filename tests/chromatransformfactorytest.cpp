@@ -21,13 +21,14 @@
 
 #include "_testhelpers.h"
 
-TEST (ChromaTransformFactoryTest, RepeatedTransformRequests) {
-  KeyFinder::ChromaTransformFactory ctf;
+TEST(ChromaTransformFactoryTest, RepeatedTransformRequests)
+{
+    KeyFinder::ChromaTransformFactory ctf;
 
-  const KeyFinder::ChromaTransform* ct1 = ctf.getChromaTransform(4410);
-  const KeyFinder::ChromaTransform* ct2 = ctf.getChromaTransform(4410);
-  const KeyFinder::ChromaTransform* ct3 = ctf.getChromaTransform(4800);
+    const KeyFinder::ChromaTransform* ct1 = ctf.getChromaTransform(4410);
+    const KeyFinder::ChromaTransform* ct2 = ctf.getChromaTransform(4410);
+    const KeyFinder::ChromaTransform* ct3 = ctf.getChromaTransform(4800);
 
-  ASSERT_EQ(ct1, ct2);
-  ASSERT_NE(ct2, ct3);
+    ASSERT_EQ(ct1, ct2);
+    ASSERT_NE(ct2, ct3);
 }

@@ -27,28 +27,27 @@
 
 namespace KeyFinder {
 
-  class TemporalWindowFactory {
-  public:
+class TemporalWindowFactory {
+public:
     TemporalWindowFactory();
     ~TemporalWindowFactory();
     const std::vector<double>* getTemporalWindow(unsigned int frameSize);
-  private:
+
+private:
     class TemporalWindowWrapper;
     std::vector<TemporalWindowWrapper*> temporalWindows;
     std::mutex temporalWindowFactoryMutex;
-  };
+};
 
-  class TemporalWindowFactory::TemporalWindowWrapper {
-  public:
+class TemporalWindowFactory::TemporalWindowWrapper {
+public:
     TemporalWindowWrapper(unsigned int frameSize);
     unsigned int getFrameSize() const;
     const std::vector<double>* getTemporalWindow() const;
-  private:
+
+private:
     std::vector<double> temporalWindow;
-  };
-
-
-
+};
 
 }
 

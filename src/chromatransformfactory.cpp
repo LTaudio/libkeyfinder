@@ -23,40 +23,52 @@
 
 namespace KeyFinder {
 
-  ChromaTransformFactory::ChromaTransformWrapper::ChromaTransformWrapper(unsigned int inFrameRate, const ChromaTransform* const inChromaTransform) : frameRate(inFrameRate), chromaTransform(inChromaTransform) { }
+ChromaTransformFactory::ChromaTransformWrapper::ChromaTransformWrapper(unsigned int inFrameRate, const ChromaTransform* const inChromaTransform)
+    : frameRate(inFrameRate)
+    , chromaTransform(inChromaTransform)
+{
+}
 
-  ChromaTransformFactory::ChromaTransformWrapper::~ChromaTransformWrapper() {
+ChromaTransformFactory::ChromaTransformWrapper::~ChromaTransformWrapper()
+{
     delete chromaTransform;
-  }
+}
 
-  const ChromaTransform* ChromaTransformFactory::ChromaTransformWrapper::getChromaTransform() const {
+const ChromaTransform* ChromaTransformFactory::ChromaTransformWrapper::getChromaTransform() const
+{
     return chromaTransform;
-  }
+}
 
-  unsigned int ChromaTransformFactory::ChromaTransformWrapper::getFrameRate() const {
+unsigned int ChromaTransformFactory::ChromaTransformWrapper::getFrameRate() const
+{
     return frameRate;
-  }
+}
 
-  ChromaTransformFactory::ChromaTransformFactory() : chromaTransforms(0) { }
+ChromaTransformFactory::ChromaTransformFactory()
+    : chromaTransforms(0)
+{
+}
 
-  ChromaTransformFactory::~ChromaTransformFactory() {
+ChromaTransformFactory::~ChromaTransformFactory()
+{
     for (unsigned int i = 0; i < chromaTransforms.size(); i++) {
-      delete chromaTransforms[i];
+        delete chromaTransforms[i];
     }
-  }
+}
 
-  const ChromaTransform* ChromaTransformFactory::getChromaTransform(unsigned int frameRate) {
+const ChromaTransform* ChromaTransformFactory::getChromaTransform(unsigned int frameRate)
+{
     for (unsigned int i = 0; i < chromaTransforms.size(); i++) {
-      ChromaTransformWrapper* wrapper = chromaTransforms[i];
-      if (wrapper->getFrameRate() == frameRate) {
-        return wrapper->getChromaTransform();
-      }
+        ChromaTransformWrapper* wrapper = chromaTransforms[i];
+        if (wrapper->getFrameRate() == frameRate) {
+            return wrapper->getChromaTransform();
+        }
     }
     chromaTransformFactoryMutex.lock();
     chromaTransforms.push_back(new ChromaTransformWrapper(frameRate, new ChromaTransform(frameRate)));
-    unsigned int newChromaTransformIndex = chromaTransforms.size()-1;
+    unsigned int newChromaTransformIndex = chromaTransforms.size() - 1;
     chromaTransformFactoryMutex.unlock();
     return chromaTransforms[newChromaTransformIndex]->getChromaTransform();
-  }
+}
 
 }

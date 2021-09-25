@@ -21,13 +21,14 @@
 
 #include "_testhelpers.h"
 
-TEST (LowPassFilterFactoryTest, RepeatedFilterRequests) {
-  KeyFinder::LowPassFilterFactory lpff;
+TEST(LowPassFilterFactoryTest, RepeatedFilterRequests)
+{
+    KeyFinder::LowPassFilterFactory lpff;
 
-  const KeyFinder::LowPassFilter* lpf1 = lpff.getLowPassFilter(2, 1, 20.0, 8);
-  const KeyFinder::LowPassFilter* lpf2 = lpff.getLowPassFilter(2, 1, 20.0, 8);
-  const KeyFinder::LowPassFilter* lpf3 = lpff.getLowPassFilter(2, 1, 20.0, 16);
+    const KeyFinder::LowPassFilter* lpf1 = lpff.getLowPassFilter(2, 1, 20.0, 8);
+    const KeyFinder::LowPassFilter* lpf2 = lpff.getLowPassFilter(2, 1, 20.0, 8);
+    const KeyFinder::LowPassFilter* lpf3 = lpff.getLowPassFilter(2, 1, 20.0, 16);
 
-  ASSERT_EQ(lpf1, lpf2);
-  ASSERT_NE(lpf2, lpf3);
+    ASSERT_EQ(lpf1, lpf2);
+    ASSERT_NE(lpf2, lpf3);
 }
