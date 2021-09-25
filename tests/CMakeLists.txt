@@ -19,7 +19,7 @@ add_executable(keyfinder-tests
     windowfunctiontest.cpp
     workspacetest.cpp)
 target_include_directories(keyfinder-tests PRIVATE ../src)
-target_link_libraries(keyfinder-tests PRIVATE keyfinder)
+target_link_libraries(keyfinder-tests PRIVATE keyfinder lt::CodeCoverage)
 find_package(Catch2 CONFIG)
 if(NOT TARGET Catch2::Catch2)
     message(STATUS "Fetching Catch2 from GitHub")

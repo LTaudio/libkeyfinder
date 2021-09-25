@@ -59,12 +59,17 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     )
 endif()
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(ltCompilerOptions)
+include(ltCompilerWarnings)
+include(ltCodeCoverage)
+
 find_package(FFTW3 REQUIRED)
 
 add_library(keyfinder)
 add_library(lt::KeyFinder ALIAS keyfinder)
 set_target_properties(keyfinder PROPERTIES VERSION ${PROJECT_VERSION})
-target_link_libraries(keyfinder PUBLIC FFTW3::fftw3)
+target_link_libraries(keyfinder PUBLIC FFTW3::fftw3 lt::CodeCoverage)
 target_include_directories(keyfinder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_sources(keyfinder
   PRIVATE
