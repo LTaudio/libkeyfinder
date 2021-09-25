@@ -31,7 +31,7 @@ class LowPassFilterFactory {
 public:
     LowPassFilterFactory();
     ~LowPassFilterFactory();
-    auto getLowPassFilter(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize) -> const LowPassFilter*;
+    auto getLowPassFilter(unsigned int order, unsigned int frameRate, float cornerFrequency, unsigned int fftFrameSize) -> const LowPassFilter*;
 
 private:
     class LowPassFilterWrapper;
@@ -41,18 +41,18 @@ private:
 
 class LowPassFilterFactory::LowPassFilterWrapper {
 public:
-    LowPassFilterWrapper(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize, const LowPassFilter* filter);
+    LowPassFilterWrapper(unsigned int order, unsigned int frameRate, float cornerFrequency, unsigned int fftFrameSize, const LowPassFilter* filter);
     ~LowPassFilterWrapper();
     [[nodiscard]] auto getLowPassFilter() const -> const LowPassFilter*;
     [[nodiscard]] auto getOrder() const -> unsigned int;
     [[nodiscard]] auto getFrameRate() const -> unsigned int;
-    [[nodiscard]] auto getCornerFrequency() const -> double;
+    [[nodiscard]] auto getCornerFrequency() const -> float;
     [[nodiscard]] auto getFftFrameSize() const -> unsigned int;
 
 private:
     unsigned int order_;
     unsigned int frameRate_;
-    double cornerFrequency_;
+    float cornerFrequency_;
     unsigned int fftFrameSize_;
     const LowPassFilter* lowPassFilter_;
 };

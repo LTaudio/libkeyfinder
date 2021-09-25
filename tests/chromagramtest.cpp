@@ -111,7 +111,7 @@ TEST(ChromagramTest, CollapseToOneHop)
     c.setMagnitude(1, 0, 15.0);
     c.setMagnitude(2, 0, 20.0);
 
-    std::vector<double> d = c.collapseToOneHop();
+    std::vector<float> d = c.collapseToOneHop();
 
     ASSERT_EQ(72, d.size());
     ASSERT_FLOAT_EQ(15.0, d[0]);

@@ -39,7 +39,7 @@ auto TemporalWindowFactory::TemporalWindowWrapper::getFrameSize() const -> unsig
     return temporalWindow_.size();
 }
 
-auto TemporalWindowFactory::TemporalWindowWrapper::getTemporalWindow() const -> const std::vector<double>*
+auto TemporalWindowFactory::TemporalWindowWrapper::getTemporalWindow() const -> const std::vector<float>*
 {
     return &temporalWindow_;
 }
@@ -56,7 +56,7 @@ TemporalWindowFactory::~TemporalWindowFactory()
     }
 }
 
-auto TemporalWindowFactory::getTemporalWindow(unsigned int frameSize) -> const std::vector<double>*
+auto TemporalWindowFactory::getTemporalWindow(unsigned int frameSize) -> const std::vector<float>*
 {
     for (auto* wrapper : temporalWindows_) {
         if (wrapper->getFrameSize() == frameSize) {

@@ -86,7 +86,7 @@ void AudioData::prepend(const AudioData& that)
 }
 
 // get sample by absolute index
-auto AudioData::getSample(unsigned int index) const -> double
+auto AudioData::getSample(unsigned int index) const -> float
 {
     if (index >= getSampleCount()) {
         std::ostringstream ss;
@@ -97,7 +97,7 @@ auto AudioData::getSample(unsigned int index) const -> double
 }
 
 // get sample by frame and channel
-auto AudioData::getSampleByFrame(unsigned int frame, unsigned int channel) const -> double
+auto AudioData::getSampleByFrame(unsigned int frame, unsigned int channel) const -> float
 {
     if (frame >= getFrameCount()) {
         std::ostringstream ss;
@@ -113,7 +113,7 @@ auto AudioData::getSampleByFrame(unsigned int frame, unsigned int channel) const
 }
 
 // set sample by absolute index
-void AudioData::setSample(unsigned int index, double value)
+void AudioData::setSample(unsigned int index, float value)
 {
     if (index >= getSampleCount()) {
         std::ostringstream ss;
@@ -127,7 +127,7 @@ void AudioData::setSample(unsigned int index, double value)
 }
 
 // set sample by frame and channel
-void AudioData::setSampleByFrame(unsigned int frame, unsigned int channel, double value)
+void AudioData::setSampleByFrame(unsigned int frame, unsigned int channel, float value)
 {
     if (frame >= getFrameCount()) {
         std::ostringstream ss;
@@ -176,7 +176,7 @@ void AudioData::reduceToMono()
     auto readAt = samples_.begin();
     auto writeAt = samples_.begin();
     while (readAt < samples_.end()) {
-        double sum = 0.0;
+        float sum = 0.0;
         for (unsigned int c = 0; c < channels_; c++) {
             sum += *readAt;
             std::advance(readAt, 1);
@@ -204,7 +204,7 @@ void AudioData::downsample(unsigned int factor, bool shortcut)
     size_t numSamplesRemaining = samples_.size();
 
     while (readAt < samples_.end()) {
-        double mean = 0.0;
+        float mean = 0.0;
         if (shortcut) {
             mean = *readAt;
             if (numSamplesRemaining >= factor) {
@@ -220,13 +220,13 @@ void AudioData::downsample(unsigned int factor, bool shortcut)
                     std::advance(readAt, 1);
                     --numSamplesRemaining;
                 }
-                mean /= (double)factor;
+                mean /= (float)factor;
             }
         }
         *writeAt = mean;
         std::advance(writeAt, 1);
     }
-    samples_.resize(ceil((double)getSampleCount() / (double)factor));
+    samples_.resize(ceil((float)getSampleCount() / (float)factor));
     setFrameRate(getFrameRate() / factor);
 }
 
@@ -299,12 +299,12 @@ void AudioData::advanceWriteIterator(unsigned int by)
     std::advance(writeIterator_, by);
 }
 
-auto AudioData::getSampleAtReadIterator() const -> double
+auto AudioData::getSampleAtReadIterator() const -> float
 {
     return *readIterator_;
 }
 
-void AudioData::setSampleAtWriteIterator(double value)
+void AudioData::setSampleAtWriteIterator(float value)
 {
     *writeIterator_ = value;
 }

@@ -39,7 +39,7 @@ public:
 
 protected:
     const ChromaTransform* chromaTransform;
-    const std::vector<double>* tw;
+    const std::vector<float>* tw;
 };
 
 }

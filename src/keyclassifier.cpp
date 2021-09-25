@@ -25,7 +25,7 @@
 
 namespace KeyFinder {
 
-KeyClassifier::KeyClassifier(const std::vector<double>& majorProfile, const std::vector<double>& minorProfile)
+KeyClassifier::KeyClassifier(const std::vector<float>& majorProfile, const std::vector<float>& minorProfile)
 {
 
     if (majorProfile.size() != BANDS) {
@@ -38,7 +38,7 @@ KeyClassifier::KeyClassifier(const std::vector<double>& majorProfile, const std:
 
     major_ = new ToneProfile(majorProfile);
     minor_ = new ToneProfile(minorProfile);
-    silence_ = new ToneProfile(std::vector<double>(BANDS, 0.0));
+    silence_ = new ToneProfile(std::vector<float>(BANDS, 0.0));
 }
 
 KeyClassifier::~KeyClassifier()
@@ -48,12 +48,12 @@ KeyClassifier::~KeyClassifier()
     delete silence_;
 }
 
-auto KeyClassifier::classify(const std::vector<double>& chromaVector) -> KeyT
+auto KeyClassifier::classify(const std::vector<float>& chromaVector) -> KeyT
 {
-    std::vector<double> scores(24);
-    double bestScore = 0.0;
+    std::vector<float> scores(24);
+    float bestScore = 0.0;
     for (unsigned int i = 0; i < SEMITONES; i++) {
-        double score = NAN;
+        float score = NAN;
         score = major_->cosineSimilarity(chromaVector, i); // major
         scores[i * 2] = score;
         score = minor_->cosineSimilarity(chromaVector, i); // minor

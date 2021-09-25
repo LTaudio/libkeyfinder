@@ -58,7 +58,7 @@ auto SpectrumAnalyser::chromagramOfWholeFrames(AudioData& audio, FftAdapter* con
 
         fftAdapter->execute();
 
-        std::vector<double> cv = chromaTransform->chromaVector(fftAdapter);
+        std::vector<float> cv = chromaTransform->chromaVector(fftAdapter);
         auto cvIt = cv.begin();
         for (unsigned int band = 0; band < BANDS; band++) {
             ch->setMagnitude(hop, band, *cvIt);

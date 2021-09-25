@@ -23,7 +23,7 @@
 
 namespace KeyFinder {
 
-static double frequencies[] = {
+static float frequencies[] = {
     32.7031956625748,
     34.647828872109,
     36.708095989676,
@@ -98,7 +98,7 @@ static double frequencies[] = {
     1975.5332050245
 };
 
-auto getFrequencyOfBand(unsigned int band) -> double
+auto getFrequencyOfBand(unsigned int band) -> float
 {
     if (band >= BANDS) {
         std::ostringstream ss;
@@ -108,12 +108,12 @@ auto getFrequencyOfBand(unsigned int band) -> double
     return frequencies[band];
 }
 
-auto getLastFrequency() -> double
+auto getLastFrequency() -> float
 {
     return frequencies[BANDS - 1];
 }
 
-static double majorProfile[SEMITONES] = {
+static float majorProfile[SEMITONES] = {
     7.23900502618145225142,
     3.50351166725158691406,
     3.58445177536649417505,
@@ -128,7 +128,7 @@ static double majorProfile[SEMITONES] = {
     4.45932757378886890365,
 };
 
-static double minorProfile[SEMITONES] = {
+static float minorProfile[SEMITONES] = {
     7.00255045060284420089,
     3.14360279015996679775,
     4.35904319714962529275,
@@ -143,7 +143,7 @@ static double minorProfile[SEMITONES] = {
     3.83242038595048351013,
 };
 
-static double octaveWeights[OCTAVES] = {
+static float octaveWeights[OCTAVES] = {
     0.39997267549999998559,
     0.55634425248300645173,
     0.52496636345143543600,
@@ -152,14 +152,14 @@ static double octaveWeights[OCTAVES] = {
     0.49072435317960994006,
 };
 
-static std::vector<double> tpMajor;
-static std::vector<double> tpMinor;
+static std::vector<float> tpMajor;
+static std::vector<float> tpMinor;
 
-auto toneProfileMajor() -> const std::vector<double>&
+auto toneProfileMajor() -> const std::vector<float>&
 {
     if (tpMajor.empty()) {
-        for (double o : octaveWeights) {
-            for (double s : majorProfile) {
+        for (float o : octaveWeights) {
+            for (float s : majorProfile) {
                 tpMajor.push_back(o * s);
             }
         }
@@ -167,11 +167,11 @@ auto toneProfileMajor() -> const std::vector<double>&
     return tpMajor;
 }
 
-auto toneProfileMinor() -> const std::vector<double>&
+auto toneProfileMinor() -> const std::vector<float>&
 {
     if (tpMinor.empty()) {
-        for (double o : octaveWeights) {
-            for (double s : minorProfile) {
+        for (float o : octaveWeights) {
+            for (float s : minorProfile) {
                 tpMinor.push_back(o * s);
             }
         }

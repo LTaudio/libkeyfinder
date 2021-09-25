@@ -57,14 +57,14 @@ public:
     {
     }
     auto getChromaBandFftBinOffsets() -> std::vector<unsigned int> { return chromaBandFftBinOffsets; }
-    auto getDirectSpectralKernel() -> std::vector<std::vector<double>> { return directSpectralKernel; }
+    auto getDirectSpectralKernel() -> std::vector<std::vector<float>> { return directSpectralKernel; }
 };
 
 /*TEST (ChromaTransformTest, TestSpectralKernel) {
   MyChromaTransform* myCt = NULL;
   myCt = new MyChromaTransform(4410);
   std::vector<unsigned int> cbfbo = myCt->getChromaBandFftBinOffsets();
-  std::vector< std::vector<double> > dsk = myCt->getDirectSpectralKernel();
+  std::vector< std::vector<float> > dsk = myCt->getDirectSpectralKernel();
   delete myCt;
 
   // ensure correct element sizes

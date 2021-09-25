@@ -57,7 +57,7 @@ TEST(WindowFunctionTest, GaussianFn)
 {
     KeyFinder::WindowFunction win;
     unsigned int width = 23;
-    std::vector<double> g(width, 0.0);
+    std::vector<float> g(width, 0.0);
     for (unsigned int i = 0; i < width; i++) {
         g[i] = win.gaussianWindow(i, width, sqrt(12.0));
     }
@@ -76,10 +76,10 @@ TEST(WindowFunctionTest, ConvolutionOfPulseAndRectangle)
 {
     KeyFinder::WindowFunction win;
     unsigned int width = 101;
-    std::vector<double> a(width, 0.0);
+    std::vector<float> a(width, 0.0);
     a[width / 2] = 1.0;
-    std::vector<double> b(width, 1.0);
-    std::vector<double> c = win.convolve(a, b);
+    std::vector<float> b(width, 1.0);
+    std::vector<float> c = win.convolve(a, b);
     for (unsigned int i = 0; i < width; i++) {
         ASSERT_FLOAT_EQ(1.0 / width, c[i]);
     }
@@ -89,9 +89,9 @@ TEST(WindowFunctionTest, ConvolutionOfTwoRectangles)
 {
     KeyFinder::WindowFunction win;
     unsigned int width = 101;
-    std::vector<double> a(width, 1.0);
-    std::vector<double> b(width, 1.0);
-    std::vector<double> c = win.convolve(a, b);
+    std::vector<float> a(width, 1.0);
+    std::vector<float> b(width, 1.0);
+    std::vector<float> c = win.convolve(a, b);
     ASSERT_NEAR(0.5, c[0], 0.01);
     ASSERT_NEAR(1.0, c[width / 2], 0.01);
     ASSERT_NEAR(0.5, c[width - 1], 0.01);
@@ -101,13 +101,13 @@ TEST(WindowFunctionTest, ConvolutionOfPulseAndCurve)
 {
     KeyFinder::WindowFunction win;
     unsigned int width = 101;
-    std::vector<double> a(width, 0.0);
+    std::vector<float> a(width, 0.0);
     a[width / 2] = 1.0;
-    std::vector<double> b(width, 0.0);
+    std::vector<float> b(width, 0.0);
     for (unsigned int i = 0; i < width; i++) {
         b[i] = win.window(KeyFinder::WINDOW_BLACKMAN, i, width);
     }
-    std::vector<double> c = win.convolve(a, b);
+    std::vector<float> c = win.convolve(a, b);
     for (unsigned int i = 0; i < width; i++) {
         ASSERT_FLOAT_EQ(win.window(KeyFinder::WINDOW_BLACKMAN, i, width) / width, c[i]);
     }

@@ -25,7 +25,7 @@ TEST(FftAdapterTest, ForwardAndBackward)
 {
 
     unsigned int frameSize = 4096;
-    std::vector<double> original(frameSize);
+    std::vector<float> original(frameSize);
     KeyFinder::FftAdapter forwards(frameSize);
 
     for (unsigned int i = 0; i < frameSize; i++) {
@@ -70,6 +70,6 @@ TEST(FftAdapterTest, ForwardAndBackward)
     backwards.execute();
 
     for (unsigned int i = 0; i < frameSize; i++) {
-        ASSERT_NEAR(original[i], backwards.getOutput(i), 0.001);
+        ASSERT_NEAR(original[i], backwards.getOutput(i), 0.01f);
     }
 }

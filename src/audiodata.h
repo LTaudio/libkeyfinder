@@ -32,17 +32,17 @@ public:
 
     [[nodiscard]] auto getChannels() const -> unsigned int;
     [[nodiscard]] auto getFrameRate() const -> unsigned int;
-    [[nodiscard]] auto getSample(unsigned int index) const -> double;
-    [[nodiscard]] auto getSampleByFrame(unsigned int frame, unsigned int channel) const -> double;
-    [[nodiscard]] auto getSampleAtReadIterator() const -> double;
+    [[nodiscard]] auto getSample(unsigned int index) const -> float;
+    [[nodiscard]] auto getSampleByFrame(unsigned int frame, unsigned int channel) const -> float;
+    [[nodiscard]] auto getSampleAtReadIterator() const -> float;
     [[nodiscard]] auto getSampleCount() const -> unsigned int;
     [[nodiscard]] auto getFrameCount() const -> unsigned int;
 
     void setChannels(unsigned int inChannels);
     void setFrameRate(unsigned int inFrameRate);
-    void setSample(unsigned int index, double value);
-    void setSampleByFrame(unsigned int frame, unsigned int channels, double value);
-    void setSampleAtWriteIterator(double value);
+    void setSample(unsigned int index, float value);
+    void setSampleByFrame(unsigned int frame, unsigned int channels, float value);
+    void setSampleAtWriteIterator(float value);
     void addToSampleCount(unsigned int inSamples);
     void addToFrameCount(unsigned int inFrames);
 
@@ -60,11 +60,11 @@ public:
     auto sliceSamplesFromBack(unsigned int sliceSampleCount) -> AudioData*;
 
 private:
-    std::deque<double> samples_;
+    std::deque<float> samples_;
     unsigned int channels_ { 0 };
     unsigned int frameRate_ { 0 };
-    std::deque<double>::const_iterator readIterator_;
-    std::deque<double>::iterator writeIterator_;
+    std::deque<float>::const_iterator readIterator_;
+    std::deque<float>::iterator writeIterator_;
 };
 
 }

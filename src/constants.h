@@ -95,11 +95,11 @@ enum ScaleT {
     SCALE_MINOR
 };
 
-auto getFrequencyOfBand(unsigned int band) -> double;
-auto getLastFrequency() -> double;
+auto getFrequencyOfBand(unsigned int band) -> float;
+auto getLastFrequency() -> float;
 
-auto toneProfileMajor() -> const std::vector<double>&;
-auto toneProfileMinor() -> const std::vector<double>&;
+auto toneProfileMajor() -> const std::vector<float>&;
+auto toneProfileMinor() -> const std::vector<float>&;
 }
 
 #endif

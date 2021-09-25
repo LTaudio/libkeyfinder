@@ -43,7 +43,7 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         GENERATORS
             cmake_find_package
         OPTIONS
-            fftw:precision=double
+            fftw:precision=single
             fftw:simd=sse
     )
     conan_cmake_autodetect(settings)
@@ -65,12 +65,12 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 
-find_package(FFTW3 REQUIRED)
+find_package(FFTW3f REQUIRED)
 
 add_library(keyfinder)
 add_library(lt::KeyFinder ALIAS keyfinder)
 set_target_properties(keyfinder PROPERTIES VERSION ${PROJECT_VERSION})
-target_link_libraries(keyfinder PUBLIC FFTW3::fftw3 lt::CompilerWarnings lt::CodeCoverage)
+target_link_libraries(keyfinder PUBLIC FFTW3::fftw3f lt::CompilerWarnings lt::CodeCoverage)
 target_include_directories(keyfinder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_sources(keyfinder
   PRIVATE

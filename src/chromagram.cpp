@@ -24,11 +24,11 @@
 namespace KeyFinder {
 
 Chromagram::Chromagram(unsigned int hops)
-    : chromaData_(hops, std::vector<double>(BANDS, 0.0))
+    : chromaData_(hops, std::vector<float>(BANDS, 0.0))
 {
 }
 
-auto Chromagram::getMagnitude(unsigned int hop, unsigned int band) const -> double
+auto Chromagram::getMagnitude(unsigned int hop, unsigned int band) const -> float
 {
     if (hop >= getHops()) {
         std::ostringstream ss;
@@ -43,7 +43,7 @@ auto Chromagram::getMagnitude(unsigned int hop, unsigned int band) const -> doub
     return chromaData_[hop][band];
 }
 
-void Chromagram::setMagnitude(unsigned int hop, unsigned int band, double value)
+void Chromagram::setMagnitude(unsigned int hop, unsigned int band, float value)
 {
     if (hop >= getHops()) {
         std::ostringstream ss;
@@ -61,9 +61,9 @@ void Chromagram::setMagnitude(unsigned int hop, unsigned int band, double value)
     chromaData_[hop][band] = value;
 }
 
-auto Chromagram::collapseToOneHop() const -> std::vector<double>
+auto Chromagram::collapseToOneHop() const -> std::vector<float>
 {
-    std::vector<double> oneHop = std::vector<double>(BANDS, 0.0);
+    std::vector<float> oneHop = std::vector<float>(BANDS, 0.0);
     for (unsigned int h = 0; h < getHops(); h++) {
         for (unsigned int b = 0; b < BANDS; b++) {
             oneHop[b] += getMagnitude(h, b) / getHops();

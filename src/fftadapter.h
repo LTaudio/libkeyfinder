@@ -34,11 +34,11 @@ public:
     FftAdapter(unsigned int frameSize);
     ~FftAdapter();
     [[nodiscard]] auto getFrameSize() const -> unsigned int;
-    void setInput(unsigned int i, double real);
+    void setInput(unsigned int i, float real);
     void execute();
-    [[nodiscard]] auto getOutputReal(unsigned int i) const -> double;
-    [[nodiscard]] auto getOutputImaginary(unsigned int i) const -> double;
-    [[nodiscard]] auto getOutputMagnitude(unsigned int i) const -> double;
+    [[nodiscard]] auto getOutputReal(unsigned int i) const -> float;
+    [[nodiscard]] auto getOutputImaginary(unsigned int i) const -> float;
+    [[nodiscard]] auto getOutputMagnitude(unsigned int i) const -> float;
 
 protected:
     unsigned int frameSize;
@@ -50,9 +50,9 @@ public:
     InverseFftAdapter(unsigned int frameSize);
     ~InverseFftAdapter();
     [[nodiscard]] auto getFrameSize() const -> unsigned int;
-    void setInput(unsigned int i, double real, double imaginary);
+    void setInput(unsigned int i, float real, float imaginary);
     void execute();
-    [[nodiscard]] auto getOutput(unsigned int i) const -> double;
+    [[nodiscard]] auto getOutput(unsigned int i) const -> float;
 
 protected:
     unsigned int frameSize;

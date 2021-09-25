@@ -23,7 +23,7 @@
 
 namespace KeyFinder {
 
-ToneProfile::ToneProfile(const std::vector<double>& customProfile)
+ToneProfile::ToneProfile(const std::vector<float>& customProfile)
 {
 
     if (customProfile.size() != BANDS) {
@@ -31,10 +31,10 @@ ToneProfile::ToneProfile(const std::vector<double>& customProfile)
     }
 
     for (unsigned int o = 0; o < OCTAVES; o++) {
-        auto* tonic = new Binode<double>((double)customProfile[o * SEMITONES]);
-        Binode<double>* q = tonic;
+        auto* tonic = new Binode<float>((float)customProfile[o * SEMITONES]);
+        Binode<float>* q = tonic;
         for (unsigned int i = 1; i < SEMITONES; i++) {
-            q->r = new Binode<double>((double)customProfile[o * SEMITONES + i]);
+            q->r = new Binode<float>((float)customProfile[o * SEMITONES + i]);
             q->r->l = q;
             q = q->r;
         }
@@ -58,30 +58,30 @@ ToneProfile::~ToneProfile()
 void ToneProfile::free()
 {
     for (unsigned int o = 0; o < OCTAVES; o++) {
-        Binode<double>* p = tonics_[o];
+        Binode<float>* p = tonics_[o];
         do {
-            Binode<double>* zap = p;
+            Binode<float>* zap = p;
             p = p->r;
             delete zap;
         } while (p != tonics_[o]);
     }
 }
 
-auto ToneProfile::cosineSimilarity(const std::vector<double>& input, int offset) const -> double
+auto ToneProfile::cosineSimilarity(const std::vector<float>& input, int offset) const -> float
 {
 
     if (input.size() != BANDS) {
         throw Exception("Chroma data must have 72 elements");
     }
 
-    double intersection = 0.0;
-    double profileNorm = 0.0;
-    double inputNorm = 0.0;
+    float intersection = 0.0;
+    float profileNorm = 0.0;
+    float inputNorm = 0.0;
 
     for (unsigned int o = 0; o < OCTAVES; o++) {
         // Rotate starting pointer left for offset. Each step shifts the position
         // of the tonic one step further right of the starting pointer (or one semitone up).
-        Binode<double>* p = tonics_[o];
+        Binode<float>* p = tonics_[o];
         for (int i = 0; i < offset; i++) {
             p = p->l;
         }

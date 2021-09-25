@@ -41,12 +41,12 @@ public:
     auto keyOfAudio(const AudioData& audio) -> KeyT;
 
     // for experimentation with alternative tone profiles
-    [[nodiscard]] static auto keyOfChromaVector(const std::vector<double>& chromaVector, const std::vector<double>& overrideMajorProfile, const std::vector<double>& overrideMinorProfile) -> KeyT;
+    [[nodiscard]] static auto keyOfChromaVector(const std::vector<float>& chromaVector, const std::vector<float>& overrideMajorProfile, const std::vector<float>& overrideMinorProfile) -> KeyT;
 
 private:
     void preprocess(AudioData& workingAudio, Workspace& workspace, bool flushRemainderBuffer = false);
     void chromagramOfBufferedAudio(Workspace& workspace);
-    [[nodiscard]] static auto keyOfChromaVector(const std::vector<double>& chromaVector) -> KeyT;
+    [[nodiscard]] static auto keyOfChromaVector(const std::vector<float>& chromaVector) -> KeyT;
     LowPassFilterFactory lpfFactory_;
     ChromaTransformFactory ctFactory_;
     TemporalWindowFactory twFactory_;

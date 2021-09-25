@@ -29,13 +29,13 @@ namespace KeyFinder {
 
 class ToneProfile {
 public:
-    ToneProfile(const std::vector<double>& customProfile);
+    ToneProfile(const std::vector<float>& customProfile);
     ~ToneProfile();
-    [[nodiscard]] auto cosineSimilarity(const std::vector<double>& input, int offset) const -> double;
+    [[nodiscard]] auto cosineSimilarity(const std::vector<float>& input, int offset) const -> float;
 
 private:
     void free();
-    std::vector<Binode<double>*> tonics_;
+    std::vector<Binode<float>*> tonics_;
 };
 
 }

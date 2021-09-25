@@ -30,13 +30,13 @@ class Chromagram {
 public:
     Chromagram(unsigned int hops = 0);
     void append(const Chromagram& that);
-    void setMagnitude(unsigned int hop, unsigned int band, double value);
-    [[nodiscard]] auto getMagnitude(unsigned int hop, unsigned int band) const -> double;
+    void setMagnitude(unsigned int hop, unsigned int band, float value);
+    [[nodiscard]] auto getMagnitude(unsigned int hop, unsigned int band) const -> float;
     [[nodiscard]] auto getHops() const -> unsigned int;
-    [[nodiscard]] auto collapseToOneHop() const -> std::vector<double>;
+    [[nodiscard]] auto collapseToOneHop() const -> std::vector<float>;
 
 private:
-    std::vector<std::vector<double>> chromaData_;
+    std::vector<std::vector<float>> chromaData_;
 };
 
 }

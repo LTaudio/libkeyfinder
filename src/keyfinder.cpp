@@ -48,7 +48,7 @@ void KeyFinder::finalChromagram(Workspace& workspace)
         preprocess(flush, workspace, true);
     }
     // zero padding
-    unsigned int paddedHopCount = ceil(workspace.preprocessedBuffer.getSampleCount() / (double)HOPSIZE);
+    unsigned int paddedHopCount = ceil(workspace.preprocessedBuffer.getSampleCount() / (float)HOPSIZE);
     unsigned int finalSampleLength = FFTFRAMESIZE + ((paddedHopCount - 1) * HOPSIZE);
     workspace.preprocessedBuffer.addToSampleCount(finalSampleLength - workspace.preprocessedBuffer.getSampleCount());
     chromagramOfBufferedAudio(workspace);
@@ -65,8 +65,8 @@ void KeyFinder::preprocess(AudioData& workingAudio, Workspace& workspace, bool f
     }
 
     // TODO: there is presumably some good maths to determine filter frequencies. For now, this approximates original experiment values.
-    double lpfCutoff = getLastFrequency() * 1.012;
-    double dsCutoff = getLastFrequency() * 1.10;
+    float lpfCutoff = getLastFrequency() * 1.012;
+    float dsCutoff = getLastFrequency() * 1.10;
     unsigned int downsampleFactor = (int)floor(workingAudio.getFrameRate() / 2 / dsCutoff);
 
     unsigned int bufferExcess = workingAudio.getSampleCount() % downsampleFactor;
@@ -99,13 +99,13 @@ void KeyFinder::chromagramOfBufferedAudio(Workspace& workspace)
     }
 }
 
-auto KeyFinder::keyOfChromaVector(const std::vector<double>& chromaVector) -> KeyT
+auto KeyFinder::keyOfChromaVector(const std::vector<float>& chromaVector) -> KeyT
 {
     KeyClassifier classifier(toneProfileMajor(), toneProfileMinor());
     return classifier.classify(chromaVector);
 }
 
-auto KeyFinder::keyOfChromaVector(const std::vector<double>& chromaVector, const std::vector<double>& overrideMajorProfile, const std::vector<double>& overrideMinorProfile) -> KeyT
+auto KeyFinder::keyOfChromaVector(const std::vector<float>& chromaVector, const std::vector<float>& overrideMajorProfile, const std::vector<float>& overrideMinorProfile) -> KeyT
 {
     KeyClassifier classifier(overrideMajorProfile, overrideMinorProfile);
     return classifier.classify(chromaVector);

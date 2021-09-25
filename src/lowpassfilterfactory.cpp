@@ -23,7 +23,7 @@
 
 namespace KeyFinder {
 
-LowPassFilterFactory::LowPassFilterWrapper::LowPassFilterWrapper(unsigned int inOrder, unsigned int inFrameRate, double inCornerFrequency, unsigned int inFftFrameSize, const LowPassFilter* const inLowPassFilter)
+LowPassFilterFactory::LowPassFilterWrapper::LowPassFilterWrapper(unsigned int inOrder, unsigned int inFrameRate, float inCornerFrequency, unsigned int inFftFrameSize, const LowPassFilter* const inLowPassFilter)
 {
     order_ = inOrder;
     frameRate_ = inFrameRate;
@@ -52,7 +52,7 @@ auto LowPassFilterFactory::LowPassFilterWrapper::getFrameRate() const -> unsigne
     return frameRate_;
 }
 
-auto LowPassFilterFactory::LowPassFilterWrapper::getCornerFrequency() const -> double
+auto LowPassFilterFactory::LowPassFilterWrapper::getCornerFrequency() const -> float
 {
     return cornerFrequency_;
 }
@@ -74,7 +74,7 @@ LowPassFilterFactory::~LowPassFilterFactory()
     }
 }
 
-auto LowPassFilterFactory::getLowPassFilter(unsigned int inOrder, unsigned int inFrameRate, double inCornerFrequency, unsigned int inFftFrameSize) -> const LowPassFilter*
+auto LowPassFilterFactory::getLowPassFilter(unsigned int inOrder, unsigned int inFrameRate, float inCornerFrequency, unsigned int inFftFrameSize) -> const LowPassFilter*
 {
     for (auto* wrapper : lowPassFilters_) {
         if (wrapper->getOrder() == inOrder && wrapper->getFrameRate() == inFrameRate && wrapper->getCornerFrequency() == inCornerFrequency && wrapper->getFftFrameSize() == inFftFrameSize) {

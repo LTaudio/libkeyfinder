@@ -37,7 +37,7 @@ public:
     AudioData preprocessedBuffer;
     Chromagram* chromagram { nullptr };
     FftAdapter* fftAdapter { nullptr };
-    std::vector<double>* lpfBuffer { nullptr };
+    std::vector<float>* lpfBuffer { nullptr };
 };
 
 }

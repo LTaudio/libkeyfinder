@@ -31,7 +31,7 @@ class TemporalWindowFactory {
 public:
     TemporalWindowFactory();
     ~TemporalWindowFactory();
-    auto getTemporalWindow(unsigned int frameSize) -> const std::vector<double>*;
+    auto getTemporalWindow(unsigned int frameSize) -> const std::vector<float>*;
 
 private:
     class TemporalWindowWrapper;
@@ -43,10 +43,10 @@ class TemporalWindowFactory::TemporalWindowWrapper {
 public:
     TemporalWindowWrapper(unsigned int frameSize);
     [[nodiscard]] auto getFrameSize() const -> unsigned int;
-    [[nodiscard]] auto getTemporalWindow() const -> const std::vector<double>*;
+    [[nodiscard]] auto getTemporalWindow() const -> const std::vector<float>*;
 
 private:
-    std::vector<double> temporalWindow_;
+    std::vector<float> temporalWindow_;
 };
 
 }

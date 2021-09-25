@@ -25,7 +25,7 @@ TEST(TemporalWindowFactoryTest, FrameSize)
 {
     KeyFinder::TemporalWindowFactory twf;
 
-    const std::vector<double>* tw1 = twf.getTemporalWindow(10);
+    const std::vector<float>* tw1 = twf.getTemporalWindow(10);
     ASSERT_EQ(10, tw1->size());
 }
 
@@ -33,7 +33,7 @@ TEST(TemporalWindowFactoryTest, Function)
 {
     KeyFinder::TemporalWindowFactory twf;
 
-    const std::vector<double>* tw1 = twf.getTemporalWindow(1000);
+    const std::vector<float>* tw1 = twf.getTemporalWindow(1000);
 
     KeyFinder::WindowFunction win;
     for (unsigned int i = 0; i < 1000; i++) {
@@ -47,9 +47,9 @@ TEST(TemporalWindowFactoryTest, RepeatedWindowRequests)
 {
     KeyFinder::TemporalWindowFactory twf;
 
-    const std::vector<double>* tw1 = twf.getTemporalWindow(10);
-    const std::vector<double>* tw2 = twf.getTemporalWindow(10);
-    const std::vector<double>* tw3 = twf.getTemporalWindow(12);
+    const std::vector<float>* tw1 = twf.getTemporalWindow(10);
+    const std::vector<float>* tw2 = twf.getTemporalWindow(10);
+    const std::vector<float>* tw3 = twf.getTemporalWindow(12);
 
     ASSERT_EQ(tw1, tw2);
     ASSERT_NE(tw2, tw3);

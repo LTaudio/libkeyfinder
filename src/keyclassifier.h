@@ -29,9 +29,9 @@ namespace KeyFinder {
 
 class KeyClassifier {
 public:
-    KeyClassifier(const std::vector<double>& majorProfile, const std::vector<double>& minorProfile);
+    KeyClassifier(const std::vector<float>& majorProfile, const std::vector<float>& minorProfile);
     ~KeyClassifier();
-    auto classify(const std::vector<double>& chromaVector) -> KeyT;
+    auto classify(const std::vector<float>& chromaVector) -> KeyT;
 
 private:
     ToneProfile* major_;

@@ -38,16 +38,16 @@ namespace KeyFinder {
 
 class LowPassFilterPrivate {
 public:
-    LowPassFilterPrivate(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize);
+    LowPassFilterPrivate(unsigned int order, unsigned int frameRate, float cornerFrequency, unsigned int fftFrameSize);
     void filter(AudioData& audio, Workspace& workspace, unsigned int shortcutFactor = 1) const;
     unsigned int order;
     unsigned int delay; // always order / 2
     unsigned int impulseLength; // always order + 1
-    double gain;
-    std::vector<double> coefficients;
+    float gain;
+    std::vector<float> coefficients;
 };
 
-LowPassFilter::LowPassFilter(unsigned int order, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize)
+LowPassFilter::LowPassFilter(unsigned int order, unsigned int frameRate, float cornerFrequency, unsigned int fftFrameSize)
 {
     priv = new LowPassFilterPrivate(order, frameRate, cornerFrequency, fftFrameSize);
 }
@@ -68,7 +68,7 @@ auto LowPassFilter::getCoefficients() const -> void const*
     return &priv->coefficients;
 }
 
-LowPassFilterPrivate::LowPassFilterPrivate(unsigned int inOrder, unsigned int frameRate, double cornerFrequency, unsigned int fftFrameSize)
+LowPassFilterPrivate::LowPassFilterPrivate(unsigned int inOrder, unsigned int frameRate, float cornerFrequency, unsigned int fftFrameSize)
 {
     if (inOrder % 2 != 0) {
         throw Exception("LPF order must be an even number");
@@ -79,14 +79,14 @@ LowPassFilterPrivate::LowPassFilterPrivate(unsigned int inOrder, unsigned int fr
     order = inOrder;
     delay = order / 2;
     impulseLength = order + 1;
-    double cutoffPoint = cornerFrequency / frameRate;
+    float cutoffPoint = cornerFrequency / frameRate;
     auto* ifft = new InverseFftAdapter(fftFrameSize);
 
     // Build frequency domain response
-    double tau = 0.5 / cutoffPoint;
+    float tau = 0.5 / cutoffPoint;
     for (unsigned int i = 0; i < fftFrameSize / 2; i++) {
-        double input = 0.0;
-        if (i / (double)fftFrameSize <= cutoffPoint) {
+        float input = 0.0;
+        if (i / (float)fftFrameSize <= cutoffPoint) {
             input = tau;
         }
         ifft->setInput(i, input, 0.0);
@@ -105,7 +105,7 @@ LowPassFilterPrivate::LowPassFilterPrivate(unsigned int inOrder, unsigned int fr
     for (unsigned int i = 0; i < impulseLength; i++) {
         // Grabbing the very end and the very beginning of the real FFT output?
         unsigned int index = (fftFrameSize - centre + i) % fftFrameSize;
-        double coeff = ifft->getOutput(index);
+        float coeff = ifft->getOutput(index);
         coeff *= win.window(WINDOW_HAMMING, i, impulseLength);
         coefficients[i] = coeff;
         gain += coeff;
@@ -121,10 +121,10 @@ void LowPassFilterPrivate::filter(AudioData& audio, Workspace& workspace, unsign
         throw Exception("Monophonic audio only");
     }
 
-    std::vector<double>* buffer = workspace.lpfBuffer;
+    std::vector<float>* buffer = workspace.lpfBuffer;
 
     if (buffer == nullptr) {
-        workspace.lpfBuffer = new std::vector<double>(impulseLength, 0.0);
+        workspace.lpfBuffer = new std::vector<float>(impulseLength, 0.0);
         buffer = workspace.lpfBuffer;
     } else {
         // clear delay buffer
@@ -136,13 +136,13 @@ void LowPassFilterPrivate::filter(AudioData& audio, Workspace& workspace, unsign
     }
 
     auto bufferFront = buffer->begin();
-    std::vector<double>::iterator bufferBack;
-    std::vector<double>::iterator bufferTemp;
+    std::vector<float>::iterator bufferBack;
+    std::vector<float>::iterator bufferTemp;
 
     unsigned int sampleCount = audio.getSampleCount();
     audio.resetIterators();
 
-    double sum = NAN;
+    float sum = NAN;
     // for each frame (running off the end of the sample stream by delay)
     for (unsigned int inSample = 0; inSample < sampleCount + delay; inSample++) {
         // shuffle old samples along delay buffer

@@ -21,30 +21,30 @@
 
 #include "_testhelpers.h"
 
-static void constructToneProfile(std::vector<double>& vec)
+static void constructToneProfile(std::vector<float>& vec)
 {
     KeyFinder::ToneProfile tp(vec);
 }
 
 TEST(ToneProfilesTest, ExceptionOnWrongCustomSize)
 {
-    std::vector<double> vec(71, 0.0);
+    std::vector<float> vec(71, 0.0);
     ASSERT_THROW(constructToneProfile(vec), KeyFinder::Exception);
-    std::vector<double> vec2(72, 0.0);
+    std::vector<float> vec2(72, 0.0);
     ASSERT_NO_THROW(constructToneProfile(vec2));
 }
 /*
 TEST (ToneProfilesTest, ExceptionOnWrongInputSize) {
-  std::vector<double> vec(144, 0.0);
+  std::vector<float> vec(144, 0.0);
   KeyFinder::ToneProfile tp(KeyFinder::SCALE_MAJOR, vec);
-  std::vector<double> vec2(73, 0.0);
+  std::vector<float> vec2(73, 0.0);
   ASSERT_THROW(tp.similarity(vec2, 0), KeyFinder::Exception);
   vec2.resize(72);
   ASSERT_NO_THROW(tp.similarity(vec2, 0));
 }
 
 TEST (ToneProfilesTest, PerfectSimilarity) {
-  std::vector<double> vec(144, 0.0);
+  std::vector<float> vec(144, 0.0);
   vec[0] = 1.0;
   vec[3] = 1.0;
   vec[7] = 1.0;
@@ -55,7 +55,7 @@ TEST (ToneProfilesTest, PerfectSimilarity) {
 }
 
 TEST (ToneProfilesTest, SimilarityNormalisesMagnitude) {
-  std::vector<double> vec(144, 0.0);
+  std::vector<float> vec(144, 0.0);
   vec[0] = 1.0;
   vec[3] = 1.0;
   vec[7] = 1.0;
@@ -69,11 +69,11 @@ TEST (ToneProfilesTest, SimilarityNormalisesMagnitude) {
 }
 
 TEST (ToneProfilesTest, PerfectDissimilarity) {
-  std::vector<double> vec1(144, 0.0);
+  std::vector<float> vec1(144, 0.0);
   vec1[0] = 1.0;
   vec1[3] = 1.0;
   vec1[7] = 1.0;
-  std::vector<double> vec2(72, 1.0);
+  std::vector<float> vec2(72, 1.0);
   vec2[0] = 0.0;
   vec2[3] = 0.0;
   vec2[7] = 0.0;
@@ -83,10 +83,10 @@ TEST (ToneProfilesTest, PerfectDissimilarity) {
 }
 
 TEST (ToneProfilesTest, PartialSimilarity) {
-  std::vector<double> vec1(144, 0.0);
+  std::vector<float> vec1(144, 0.0);
   vec1[0] = 1.0;
   vec1[1] = 3.0;
-  std::vector<double> vec2(72, 0.0);
+  std::vector<float> vec2(72, 0.0);
   vec2[0] = 3.0;
   vec2[1] = 1.0;
   KeyFinder::ToneProfile tp(KeyFinder::SCALE_MAJOR, vec1);

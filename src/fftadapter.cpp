@@ -32,28 +32,28 @@ std::mutex fftwPlanMutex;
 
 class FftAdapterPrivate {
 public:
-    double* inputReal;
-    fftw_complex* outputComplex;
-    fftw_plan plan;
+    float* inputReal;
+    fftwf_complex* outputComplex;
+    fftwf_plan plan;
 };
 
 FftAdapter::FftAdapter(unsigned int inFrameSize)
     : priv(new FftAdapterPrivate)
 {
     frameSize = inFrameSize;
-    priv->inputReal = (double*)fftw_malloc(sizeof(double) * frameSize);
-    priv->outputComplex = (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * frameSize);
-    memset(priv->outputComplex, 0, sizeof(fftw_complex) * frameSize);
+    priv->inputReal = (float*)fftwf_malloc(sizeof(float) * frameSize);
+    priv->outputComplex = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * frameSize);
+    memset(priv->outputComplex, 0, sizeof(fftwf_complex) * frameSize);
     fftwPlanMutex.lock();
-    priv->plan = fftw_plan_dft_r2c_1d(frameSize, priv->inputReal, priv->outputComplex, FFTW_ESTIMATE);
+    priv->plan = fftwf_plan_dft_r2c_1d(frameSize, priv->inputReal, priv->outputComplex, FFTW_ESTIMATE);
     fftwPlanMutex.unlock();
 }
 
 FftAdapter::~FftAdapter()
 {
-    fftw_destroy_plan(priv->plan);
-    fftw_free(priv->inputReal);
-    fftw_free(priv->outputComplex);
+    fftwf_destroy_plan(priv->plan);
+    fftwf_free(priv->inputReal);
+    fftwf_free(priv->outputComplex);
     delete priv;
 }
 
@@ -62,7 +62,7 @@ auto FftAdapter::getFrameSize() const -> unsigned int
     return frameSize;
 }
 
-void FftAdapter::setInput(unsigned int i, double real)
+void FftAdapter::setInput(unsigned int i, float real)
 {
     if (i >= frameSize) {
         std::ostringstream ss;
@@ -75,7 +75,7 @@ void FftAdapter::setInput(unsigned int i, double real)
     priv->inputReal[i] = real;
 }
 
-auto FftAdapter::getOutputReal(unsigned int i) const -> double
+auto FftAdapter::getOutputReal(unsigned int i) const -> float
 {
     if (i >= frameSize) {
         std::ostringstream ss;
@@ -85,7 +85,7 @@ auto FftAdapter::getOutputReal(unsigned int i) const -> double
     return priv->outputComplex[i][0];
 }
 
-auto FftAdapter::getOutputImaginary(unsigned int i) const -> double
+auto FftAdapter::getOutputImaginary(unsigned int i) const -> float
 {
     if (i >= frameSize) {
         std::ostringstream ss;
@@ -95,7 +95,7 @@ auto FftAdapter::getOutputImaginary(unsigned int i) const -> double
     return priv->outputComplex[i][1];
 }
 
-auto FftAdapter::getOutputMagnitude(unsigned int i) const -> double
+auto FftAdapter::getOutputMagnitude(unsigned int i) const -> float
 {
     if (i >= frameSize) {
         std::ostringstream ss;
@@ -107,34 +107,34 @@ auto FftAdapter::getOutputMagnitude(unsigned int i) const -> double
 
 void FftAdapter::execute()
 {
-    fftw_execute(priv->plan);
+    fftwf_execute(priv->plan);
 }
 
 // ================================= INVERSE =================================
 
 class InverseFftAdapterPrivate {
 public:
-    fftw_complex* inputComplex;
-    double* outputReal;
-    fftw_plan plan;
+    fftwf_complex* inputComplex;
+    float* outputReal;
+    fftwf_plan plan;
 };
 
 InverseFftAdapter::InverseFftAdapter(unsigned int inFrameSize)
     : priv(new InverseFftAdapterPrivate)
 {
     frameSize = inFrameSize;
-    priv->inputComplex = (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * frameSize);
-    priv->outputReal = (double*)fftw_malloc(sizeof(double) * frameSize);
+    priv->inputComplex = (fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex) * frameSize);
+    priv->outputReal = (float*)fftwf_malloc(sizeof(float) * frameSize);
     fftwPlanMutex.lock();
-    priv->plan = fftw_plan_dft_c2r_1d(frameSize, priv->inputComplex, priv->outputReal, FFTW_ESTIMATE);
+    priv->plan = fftwf_plan_dft_c2r_1d(frameSize, priv->inputComplex, priv->outputReal, FFTW_ESTIMATE);
     fftwPlanMutex.unlock();
 }
 
 InverseFftAdapter::~InverseFftAdapter()
 {
-    fftw_destroy_plan(priv->plan);
-    fftw_free(priv->inputComplex);
-    fftw_free(priv->outputReal);
+    fftwf_destroy_plan(priv->plan);
+    fftwf_free(priv->inputComplex);
+    fftwf_free(priv->outputReal);
     delete priv;
 }
 
@@ -143,7 +143,7 @@ auto InverseFftAdapter::getFrameSize() const -> unsigned int
     return frameSize;
 }
 
-void InverseFftAdapter::setInput(unsigned int i, double real, double imag)
+void InverseFftAdapter::setInput(unsigned int i, float real, float imag)
 {
     if (i >= frameSize) {
         std::ostringstream ss;
@@ -157,7 +157,7 @@ void InverseFftAdapter::setInput(unsigned int i, double real, double imag)
     priv->inputComplex[i][1] = imag;
 }
 
-auto InverseFftAdapter::getOutput(unsigned int i) const -> double
+auto InverseFftAdapter::getOutput(unsigned int i) const -> float
 {
     if (i >= frameSize) {
         std::ostringstream ss;
@@ -170,7 +170,7 @@ auto InverseFftAdapter::getOutput(unsigned int i) const -> double
 
 void InverseFftAdapter::execute()
 {
-    fftw_execute(priv->plan);
+    fftwf_execute(priv->plan);
 }
 
 }
