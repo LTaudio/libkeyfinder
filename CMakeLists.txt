@@ -57,12 +57,13 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         SETTINGS
             ${settings}
     )
+
+    list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+    include(ltCompilerOptions)
+    include(ltCompilerWarnings)
+    include(ltCodeCoverage)
 endif()
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-include(ltCompilerOptions)
-include(ltCompilerWarnings)
-include(ltCodeCoverage)
 
 find_package(FFTW3 REQUIRED)
 
